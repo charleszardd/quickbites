@@ -11,27 +11,34 @@
                             </v-col>
 
                             <v-col>
-                                <v-card max-width="200" class="custom-radius d-flex align-center justify-center">
-                                    <v-tabs v-model="tab" color="primary">
-                                        <v-tab class="custom-radius my-auto" max-height="40px"
-                                            value="today">Today</v-tab>
-                                        <v-tab class="custom-radius my-auto" max-height="40px"
-                                            value="history">History</v-tab>
-                                    </v-tabs>
-                                </v-card>
+                                <v-row>
+                                    <v-card max-width="200" class="custom-radius d-flex align-center justify-center">
+                                        <v-tabs v-model="tab" color="primary">
+                                            <v-tab class="custom-radius my-auto" value="today">Today</v-tab>
+                                            <v-tab class="custom-radius my-auto" value="history">History</v-tab>
+                                        </v-tabs>
+                                    </v-card>
 
-                                <v-card-text>
-                                    <v-tabs-window v-model="tab">
-                                        <v-tabs-window-item value="today">
-                                            <TodayOrders />
-                                        </v-tabs-window-item>
+                                    <v-spacer></v-spacer>
 
-                                        <v-tabs-window-item value="history">
-                                            <HistoryOrders />
-                                        </v-tabs-window-item>
-                                    </v-tabs-window>
-                                </v-card-text>
+                                    <v-btn color="primary" class="custom-radius" prepend-icon="mdi-cart-outline"
+                                        height="50">Manual
+                                        Order</v-btn>
+
+                                </v-row>
                             </v-col>
+
+                            <v-card-text>
+                                <v-tabs-window v-model="tab">
+                                    <v-tabs-window-item value="today">
+                                        <TodayOrders v-if="tab === 'today'" />
+                                    </v-tabs-window-item>
+
+                                    <v-tabs-window-item value="history">
+                                        <HistoryOrders v-if="tab === 'history'" />
+                                    </v-tabs-window-item>
+                                </v-tabs-window>
+                            </v-card-text>
                         </v-col>
                     </v-app>
                 </v-main>

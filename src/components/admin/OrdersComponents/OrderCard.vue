@@ -47,7 +47,7 @@
                     <tr v-for="item in order.cart.cart_items" :key="item.id">
                         <td class="text-left">{{ item.product.name }}</td>
                         <td class="text-center">{{ item.quantity }}</td>
-                        <td class="text-right">{{ item.price }}</td>
+                        <td class="text-right">₱{{ item.price }}</td>
                     </tr>
                 </tbody>
             </v-table>
@@ -56,7 +56,7 @@
 
             <div class="d-flex flex-wrap my-3 align-center justify-space-between">
                 <b>Total</b>
-                <b>{{ order.cart.total }}</b>
+                <b>₱{{ order.cart.total }}</b>
             </div>
 
             <v-col>
