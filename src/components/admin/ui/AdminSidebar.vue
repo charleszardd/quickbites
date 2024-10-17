@@ -11,20 +11,25 @@
             </template>
 
             <v-list density="compact" nav>
-                <v-list-item rounded="lg" prepend-icon="mdi-view-dashboard-outline" to="/admincms/dashboard"
-                    title="Dashboard" />
-                <v-list-item rounded="lg" prepend-icon="mdi-package-variant-closed" to="/admincms/orders"
-                    title="Orders" />
-                <v-list-item rounded="lg" prepend-icon="mdi-food-outline" to="/admincms/products" title="Products" />
-                <v-list-item rounded="lg" prepend-icon="mdi-account-group-outline" to="/admincms/customers"
-                    title="Customers" />
-                <v-list-item rounded="lg" prepend-icon="mdi-shield-account-outline" to="/admincms/admins"
-                    title="Admins" />
+                <v-list-item v-for="(item, index) in items" :key="index" :to="item.route" class="custom-radius"
+                    color="primary" :prepend-icon="item.icon">
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
             </v-list>
         </v-navigation-drawer>
     </div>
 </template>
 
 <script setup>
-//
+import { ref } from 'vue';
+
+const items = ref([
+    { title: 'Dashboard', route: '/admincms/dashboard', icon: 'mdi-view-dashboard-outline' },
+    { title: 'Orders', route: '/admincms/orders', icon: 'mdi-package-variant-closed' },
+    { title: 'Products', route: '/admincms/products', icon: 'mdi-food-outline' },
+    { title: 'Customers', route: '/admincms/customers', icon: 'mdi-account-group-outline' },
+    { title: 'Admins', route: '/admincms/admins', icon: 'mdi-shield-account-outline' },
+]);
 </script>
+
+<style scoped></style>
