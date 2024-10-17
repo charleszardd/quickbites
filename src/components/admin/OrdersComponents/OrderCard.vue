@@ -2,17 +2,20 @@
     <v-card class="custom-radius w-100 me-5 mb-5" :max-width="400">
         <v-col>
             <div class="d-flex flex-wrap align-center justify-space-between">
-                <h3>{{ order.customer }}</h3>
+                <h3>{{ order.customer.first_name }} {{ order.customer.last_name }}</h3>
                 <div class="rounded-lg px-3 py-1 bg-pending">
                     <p>
                         <v-icon>mdi-receipt-clock-outline</v-icon>
-                        {{ order.status.name }}
+                        {{ order.order_status.name }}
                     </p>
                 </div>
             </div>
 
             <div class="d-flex flex-wrap align-center justify-space-between">
-                <span>Order {{ order.id }} / {{ order.paymentMethod }}, Paid</span>
+                <span>Order {{ order.id }} / {{ order.cart.payment_method ? order.cart.payment_method.name :
+                    'Not Specified'
+                    }},
+                    Paid</span>
                 <div>
                     <span class="pending">
                         <v-icon>mdi-circle-medium</v-icon>
@@ -22,13 +25,12 @@
             </div>
 
             <div class="d-flex flex-wrap mt-3 align-center justify-space-between">
-                <span>{{ order.date }}</span>
-                <span>{{ order.time }}</span>
+                <span>{{ new Date(order.created_at).toLocaleDateString() }}</span>
+                <span>{{ new Date(order.created_at).toLocaleTimeString() }}</span>
             </div>
 
             <v-divider class="my-3" />
 
-            <!-- Display Reason for Cancellation -->
             <div v-if="order.reason" class="my-2">
                 <p><strong>Cancellation Reason:</strong> {{ order.reason.description }}</p>
             </div>
@@ -42,10 +44,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in order.items" :key="item.id">
-                        <td class="text-left">{{ item.name }}</td>
+                    <tr v-for="item in order.cart.cart_items" :key="item.id">
+                        <td class="text-left">{{ item.product.name }}</td>
                         <td class="text-center">{{ item.quantity }}</td>
-                        <td class="text-right">{{ formatPrice(item.price * item.quantity) }}</td>
+                        <td class="text-right">{{ item.price }}</td>
                     </tr>
                 </tbody>
             </v-table>
@@ -54,7 +56,7 @@
 
             <div class="d-flex flex-wrap my-3 align-center justify-space-between">
                 <b>Total</b>
-                <b>{{ formatPrice(calculateTotal(order.items)) }}</b>
+                <b>{{ order.cart.total }}</b>
             </div>
 
             <v-col>
@@ -71,7 +73,6 @@
             </v-col>
         </v-col>
 
-        <!-- Cancel Dialog -->
         <v-dialog v-model="dialog" max-width="600">
             <v-card>
                 <v-card-title>
@@ -91,38 +92,33 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { ref, defineProps } from 'vue';
-import { formatPrice, calculateTotal } from '@/utils/helpers';
 
 defineProps({
     order: Object,
 });
 
-// State for cancellation dialog
 const dialog = ref(false);
 const selectedReason = ref(null);
-const reasons = ref([]); // This will be populated with reasons from your API
+const reasons = ref([]);
 
-// Function to show the cancel dialog
 const showCancelDialog = () => {
     dialog.value = true;
-    fetchReasons(); // Fetch reasons when dialog opens
+    fetchReasons();
 };
 
-// Function to confirm cancellation
 const confirmCancellation = () => {
     if (selectedReason.value) {
-        // Handle cancellation logic here
         console.log('Order cancelled with reason:', selectedReason.value);
-        dialog.value = false; // Close dialog
+        dialog.value = false;
     }
 };
 
-// Function to fetch cancellation reasons (update to your API endpoint)
 const fetchReasons = async () => {
     try {
         const response = await axios.get('/api/reasons');
-        reasons.value = response.data; // Populate the reasons
+        reasons.value = response.data;
     } catch (error) {
         console.error('Error fetching reasons:', error);
     }
