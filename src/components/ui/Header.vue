@@ -1,7 +1,58 @@
 <template>
+  <v-row v-if="isUserAuthenticated" class="align-center">
+    <v-app-bar class="navbar" dense>
+      <v-col cols="auto" class="d-md-none"></v-col>
+      <v-row class="align-center">
+        <v-btn icon @click="toggleDrawer" class="toggle-button">
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
 
+        <h2 class="text-subtitle-1 font-weight-bold">QuickBites</h2>
+
+        <v-spacer />
+
+        <v-btn class="mr-5">
+          <v-icon>mdi-cart</v-icon>
+        </v-btn>
+      </v-row>
+    </v-app-bar>
+  </v-row>
+
+  <v-row v-else class="align-center">
+    <v-app-bar class="navbar" dense>
+      <v-col cols="auto" class="d-md-none"></v-col>
+      <v-row class="align-center">
+        <v-btn icon @click="toggleDrawer" class="toggle-button">
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
+
+        <h2 class="text-subtitle-1 font-weight-bold">QuickBites</h2>
+
+        <v-spacer />
+
+        <v-btn rounded class="button-text mr-6 bg-black">Sign Up</v-btn>
+      </v-row>
+    </v-app-bar>
+  </v-row>
 </template>
 
 <script setup>
-//
+import { defineProps, defineEmits } from 'vue';
+
+const emit = defineEmits();
+const props = defineProps({
+  isDrawerOpen: {
+    type: Boolean,
+    required: true
+  }
+});
+
+const toggleDrawer = () => {
+  emit('toggle-drawer');
+};
 </script>
+<style scoped>
+.button-text{
+    background-color: #171826;
+}
+</style>
