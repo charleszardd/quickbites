@@ -1,6 +1,6 @@
 <template>
     <v-layout>
-        <!-- <AdminSidebar /> -->
+        <AdminSidebar />
         <v-main>
             <slot />
         </v-main>
