@@ -12,7 +12,7 @@
         <v-spacer />
 
         <v-btn class="mr-5">
-          <v-icon>mdi-cart</v-icon>
+          <v-icon color="primary" class="text-h6">mdi-cart</v-icon>
         </v-btn>
       </v-row>
     </v-app-bar>
@@ -26,33 +26,40 @@
           <v-icon>mdi-menu</v-icon>
         </v-btn>
 
-        <h2 class="text-subtitle-1 font-weight-bold">QuickBites</h2>
+        <h2 class="text-logo font-weight-bold">QuickBites</h2>
 
         <v-spacer />
 
-        <v-btn rounded class="button-text mr-6 bg-black">Sign Up</v-btn>
+        <v-btn rounded class="button-text mr-6" to="/auth/register">Sign Up</v-btn>
       </v-row>
     </v-app-bar>
   </v-row>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, ref } from "vue";
 
 const emit = defineEmits();
 const props = defineProps({
   isDrawerOpen: {
     type: Boolean,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const toggleDrawer = () => {
-  emit('toggle-drawer');
+  emit("toggle-drawer");
 };
+
+const isUserAuthenticated = ref(!!localStorage.getItem("token"));
 </script>
 <style scoped>
-.button-text{
-    background-color: #171826;
+.text-logo{
+    font-size: 24px;
+}
+.button-text {
+  background-color: #171826;
+  color: white;
+  font-size: 14px;
 }
 </style>

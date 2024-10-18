@@ -1,21 +1,15 @@
-// main.js
+import { registerPlugins } from '@/plugins';
+import App from './App.vue';
+import router from '@/router';
+import { createApp } from 'vue';
+import axios from 'axios';
 
-// Plugins
-import { registerPlugins } from '@/plugins'
+const API_URL = import.meta.env.VITE_API_URL;
 
-// Axios
-import axios from 'axios'
-
-// Components
-import App from './App.vue'
-
-// Composables
-import { createApp } from 'vue'
+axios.defaults.baseURL = API_URL;
 
 const app = createApp(App)
 
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL
-
 registerPlugins(app)
-
+app.use(router)
 app.mount('#app')

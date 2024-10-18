@@ -6,39 +6,49 @@
       temporary
       @update:model-value="updateDrawer"
     >
-      <v-row align="center" class="drawer-header"></v-row>
-
-      <v-divider></v-divider>
+      <v-row align="center" class="mx-auto drawer-header px-3 py-2">
+        <v-avatar size="40">
+          <img :src="userAvatar" alt="User Avatar" />
+        </v-avatar>
+        <v-col class="ml-3">
+          <div class="text-h6">{{ customerName  || 'P. Diddy' }}</div>
+          <div class="profile-text ml-0 mt-1 text-body-2" color="primary">
+            <router-link to="/profile"></router-link>
+            Manage Profile
+          </div>
+        </v-col>
+      </v-row>
 
       <v-list class="item-text" density="compact">
         <v-list-item
-          :class="{'active-item': isActive('/menu')}"
+          :class="{ 'active-item': isActive('/') }"
           title="Menu"
-          to="/menu"
+          to="/"
         ></v-list-item>
-        <v-divider  /> 
+        <v-divider />
         <v-list-item
-          :class="{'active-item': isActive('/orders')}"
+          :class="{ 'active-item': isActive('/orders') }"
           title="Orders"
           to="/orders"
         ></v-list-item>
-        <v-divider  /> 
+        <v-divider />
         <v-list-item
-          :class="{'active-item': isActive('/wallet')}"
+          :class="{ 'active-item': isActive('/wallet') }"
           title="Wallet"
           to="/wallet"
         ></v-list-item>
-        <v-divider  /> 
+        <v-divider />
         <v-list-item
-          :class="{'active-item': isActive('/aboutUs')}"
+          :class="{ 'active-item': isActive('/aboutUs') }"
           title="About Us"
           to="/aboutUs"
         ></v-list-item>
-        <v-divider  /> 
+        <v-divider />
         <v-list-item
-          :class="{'active-item': isActive('/login')}"
+          :class="{ 'active-item': isActive('/auth/login') }"
           title="Sign Out"
-          to="/login"
+          @click="handleLogout"
+          to="/auth/login"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -51,47 +61,31 @@
       temporary
       @update:model-value="updateDrawer"
     >
-      <v-row align="center" class="mx-auto drawer-header px-3 py-2">
-        <v-avatar size="40">
-          <img :src="userAvatar" alt="User Avatar" />
-        </v-avatar>
-        <v-col class="ml-3">
-          <div class="text-h6">{{ userName || 'John Doe' }}</div>
-          <div
-            class="profile-text ml-0 mt-1 text-body-2"
-            color="primary"
-            to="/profile"
-          >
-            Manage Profile
-          </div>
-        </v-col>
-      </v-row>
+      <v-row align="center" class="drawer-header mt-1"></v-row>
 
-   
-
-      <v-list density="compact" >
+      <v-list density="compact">
         <v-list-item
-          :class="{'active-item': isActive('/menu')}"
+          :class="{ 'active-item': isActive('/') }"
           title="Menu"
-            to="/menu"
+          to="/menu"
         ></v-list-item>
-        <v-divider  /> 
+        <v-divider />
         <v-list-item
-          :class="{'active-item': isActive('/aboutUs')}"
+          :class="{ 'active-item': isActive('/aboutUs') }"
           title="About Us"
           to="/aboutUs"
         ></v-list-item>
-        <v-divider  /> 
+        <v-divider />
         <v-list-item
-          :class="{'active-item': isActive('/register')}"
+          :class="{ 'active-item': isActive('/auth/register') }"
           title="Sign Up"
-            to="/register"
+          to="/auth/register"
         ></v-list-item>
-        <v-divider  /> 
+        <v-divider />
         <v-list-item
-          :class="{'active-item': isActive('/login')}"
-          title="Log In"
-            to="/login"
+          :class="{ 'active-item': isActive('/auth/login') }"
+          title="Sign In"
+          to="/auth/login"
         ></v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -99,8 +93,11 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { defineProps, defineEmits, computed, ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { logout, getAuth } from "@/pages/auth/authServiceProvider/authService";
+import axios from 'axios';
+
 
 const props = defineProps({
   isDrawerOpen: {
@@ -112,14 +109,35 @@ const props = defineProps({
 const emit = defineEmits();
 
 const updateDrawer = (value) => {
-  emit('update:isDrawerOpen', value);
+  emit("update:isDrawerOpen", value);
 };
-
 
 const route = useRoute();
 const isActive = (path) => {
   return route.path === path;
 };
+
+const isUserAuthenticated = ref(!!localStorage.getItem("token"));
+const customerName = ref('');
+
+const handleLogout = async () => {
+  logout();
+  isUserAuthenticated.value = false;
+};
+
+onMounted(async() => {
+    const { token } = getAuth();
+    try{
+        const response = await axios.get('/api/get-customer-name', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        customerName.value = `${response.data.first_name} ${response.data.last_name}`;
+    } catch(error){
+        console.error(`Error fetching customer name:`, error);
+    }
+});
 </script>
 
 <style scoped>
@@ -134,7 +152,7 @@ const isActive = (path) => {
   background-color: #171826;
   color: white;
 }
-.item-text{
-    font-size: 50px;
+.item-text {
+  font-size: 50px;
 }
 </style>
