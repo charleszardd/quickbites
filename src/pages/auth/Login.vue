@@ -11,7 +11,7 @@
           variant="outlined"
           class="custom-radius"
         ></v-text-field>
-        
+
         <v-text-field
           v-model="form.password"
           type="password"
@@ -26,13 +26,13 @@
           :loading="loading"
           height="53"
           class="button-text w-100 mt-2"
-          >Log In</v-btn
+          >Sign In</v-btn
         >
         <div class="mt-4">
           <p>
             Don't have an account?
             <router-link to="/auth/register" class="register-link"
-              >Register</router-link
+              >Sign Up</router-link
             >
           </p>
         </div>

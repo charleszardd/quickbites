@@ -30,7 +30,7 @@
 
         <v-spacer />
 
-        <v-btn rounded class="button-text mr-6">Sign Up</v-btn>
+        <v-btn rounded class="button-text mr-6" to="/auth/register">Sign Up</v-btn>
       </v-row>
     </v-app-bar>
   </v-row>

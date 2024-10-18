@@ -84,7 +84,7 @@
         <v-divider />
         <v-list-item
           :class="{ 'active-item': isActive('/auth/login') }"
-          title="Log In"
+          title="Sign In"
           to="/auth/login"
         ></v-list-item>
       </v-list>
