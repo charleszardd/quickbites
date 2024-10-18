@@ -21,9 +21,8 @@
 
                                     <v-spacer></v-spacer>
 
-                                    <v-btn color="primary" class="custom-radius" prepend-icon="mdi-cart-outline"
-                                        height="50">Manual
-                                        Order</v-btn>
+                                    <RefreshButton @refresh="fetchData" :loading="loading" class="me-3" />
+                                    <ManualOrder />
 
                                 </v-row>
                             </v-col>
@@ -49,8 +48,23 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useOrderStore } from '@/stores/Admin/OrderPinia';
 
 const tab = ref('today');
+
+const orderStore = useOrderStore();
+const loading = ref(false);
+
+const fetchData = async () => {
+    loading.value = true;
+    try {
+        await orderStore.fetchOrders();
+    } catch (error) {
+        console.error("Failed to fetch orders:", error);
+    } finally {
+        loading.value = false;
+    }
+};
 </script>
 
 <style></style>
