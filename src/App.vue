@@ -2,9 +2,9 @@
   <v-app>
     <v-main>
       <Sidebar :isDrawerOpen="isDrawerOpen" @update:isDrawerOpen="toggleDrawer" />
-      <v-main>
+        <SnackbarMessage />
         <Header :isDrawerOpen="isDrawerOpen" @toggle-drawer="toggleDrawer" />
-      </v-main>
+      
       <router-view />
     </v-main>
   </v-app>

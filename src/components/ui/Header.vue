@@ -12,7 +12,7 @@
         <v-spacer />
 
         <v-btn class="mr-5">
-          <v-icon>mdi-cart</v-icon>
+          <v-icon color="primary" class="text-h6">mdi-cart</v-icon>
         </v-btn>
       </v-row>
     </v-app-bar>
@@ -30,29 +30,32 @@
 
         <v-spacer />
 
-        <v-btn rounded class="button-text mr-6 bg-black">Sign Up</v-btn>
+        <v-btn rounded class="button-text mr-6">Sign Up</v-btn>
       </v-row>
     </v-app-bar>
   </v-row>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, ref } from "vue";
 
 const emit = defineEmits();
 const props = defineProps({
   isDrawerOpen: {
     type: Boolean,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const toggleDrawer = () => {
-  emit('toggle-drawer');
+  emit("toggle-drawer");
 };
+
+const isUserAuthenticated = ref(!!localStorage.getItem("token"));
 </script>
 <style scoped>
-.button-text{
-    background-color: #171826;
+.button-text {
+  background-color: #171826;
+  color: white;
 }
 </style>
