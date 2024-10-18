@@ -2,7 +2,6 @@
     <div>
         <v-card>
             <v-layout>
-                <AdminSidebar />
                 <v-main>
                     <v-app class="px-5 py-5">
                         <AdminsContent />
