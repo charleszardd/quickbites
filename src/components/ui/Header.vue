@@ -26,7 +26,7 @@
           <v-icon>mdi-menu</v-icon>
         </v-btn>
 
-        <h2 class="text-subtitle-1 font-weight-bold">QuickBites</h2>
+        <h2 class="text-logo font-weight-bold">QuickBites</h2>
 
         <v-spacer />
 
@@ -54,8 +54,12 @@ const toggleDrawer = () => {
 const isUserAuthenticated = ref(!!localStorage.getItem("token"));
 </script>
 <style scoped>
+.text-logo{
+    font-size: 24px;
+}
 .button-text {
   background-color: #171826;
   color: white;
+  font-size: 14px;
 }
 </style>

@@ -19,8 +19,6 @@
         </v-col>
       </v-row>
 
-      <v-divider></v-divider>
-
       <v-list class="item-text" density="compact">
         <v-list-item
           :class="{ 'active-item': isActive('/') }"

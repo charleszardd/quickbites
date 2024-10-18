@@ -2,14 +2,13 @@
   <v-app>
     <v-main>
       <Sidebar :isDrawerOpen="isDrawerOpen" @update:isDrawerOpen="toggleDrawer" />
-        <SnackbarMessage />
-        <Header :isDrawerOpen="isDrawerOpen" @toggle-drawer="toggleDrawer" />
+      <Header :isDrawerOpen="isDrawerOpen" @toggle-drawer="toggleDrawer" />
       
-      <router-view />
       <component :is="currentLayout">
         <router-view />
       </component>
     </v-main>
+    <SnackbarMessage />
   </v-app>
 </template>
 
@@ -18,6 +17,12 @@ import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import CustomerLayout from '@/layouts/CustomerLayout.vue';
+
+const isDrawerOpen = ref(false);
+
+const toggleDrawer = () => {
+  isDrawerOpen.value = !isDrawerOpen.value;
+};
 
 const route = useRoute();
 
