@@ -7,24 +7,26 @@
                         <div class="d-flex">
                             <div class="left-container w-100 my-auto">
                                 <v-col>
-                                    <h1 class="page-title">Quick Bites</h1>
-                                </v-col>
+                                    <v-col>
+                                        <h1 class="page-title">Quick Bites</h1>
+                                    </v-col>
 
-                                <v-col>
-                                    <div class="mb-5">
-                                        <h3 class="form-title">Admin CMS</h3>
-                                        <p class="description">Login to your account</p>
-                                    </div>
+                                    <v-col>
+                                        <div class="mb-5">
+                                            <h3 class="form-title">Admin CMS</h3>
+                                            <p class="description">Login to your account</p>
+                                        </div>
 
-                                    <v-form @submit.prevent>
-                                        <v-text-field v-model="email" type="email" :rules="rules" label="Email address"
-                                            class="custom-radius" variant="outlined" />
-                                        <v-text-field v-model="password" type="password" :rules="rules" label="Password"
-                                            class="custom-radius" variant="outlined" />
-                                        <v-btn class="my-2 custom-radius" height="50px" color="primary" type="submit"
-                                            block>Sign in</v-btn>
-                                        <router-link>Forgot password?</router-link>
-                                    </v-form>
+                                        <v-form @submit.prevent>
+                                            <v-text-field v-model="email" type="email" :rules="rules"
+                                                label="Email address" class="custom-radius" variant="outlined" />
+                                            <v-text-field v-model="password" type="password" :rules="rules"
+                                                label="Password" class="custom-radius" variant="outlined" />
+                                            <v-btn class="my-2 custom-radius" height="50px" color="primary"
+                                                type="submit" block>Sign in</v-btn>
+                                            <router-link>Forgot password?</router-link>
+                                        </v-form>
+                                    </v-col>
                                 </v-col>
                             </div>
                             <div class="right-container">
