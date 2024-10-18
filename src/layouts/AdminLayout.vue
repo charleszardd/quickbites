@@ -1,8 +1,8 @@
 <template>
     <v-layout>
-        <AdminSidebar />
+        <!-- <AdminSidebar /> -->
         <v-main>
-            <slot /> <!-- For child views like Dashboard, Orders -->
+            <slot />
         </v-main>
     </v-layout>
 </template>
