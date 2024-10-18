@@ -73,55 +73,26 @@
             </v-col>
         </v-col>
 
-        <v-dialog v-model="dialog" max-width="600">
-            <v-card>
-                <v-card-title>
-                    <span>Select Reason for Cancellation</span>
-                </v-card-title>
-                <v-card-text>
-                    <v-select v-model="selectedReason" :items="reasons" label="Choose a reason" return-object
-                        required></v-select>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn color="primary" @click="confirmCancellation">Confirm</v-btn>
-                    <v-btn @click="dialog = false">Cancel</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <CancelOrder v-model="cancelDialogVisible" @confirm-cancellation="handleCancellation" />
     </v-card>
 </template>
 
 <script setup>
-import axios from 'axios';
 import { ref, defineProps } from 'vue';
 
 defineProps({
     order: Object,
 });
 
-const dialog = ref(false);
-const selectedReason = ref(null);
-const reasons = ref([]);
+const cancelDialogVisible = ref(false);
 
 const showCancelDialog = () => {
-    dialog.value = true;
-    fetchReasons();
+    cancelDialogVisible.value = true;
 };
 
-const confirmCancellation = () => {
-    if (selectedReason.value) {
-        console.log('Order cancelled with reason:', selectedReason.value);
-        dialog.value = false;
-    }
-};
-
-const fetchReasons = async () => {
-    try {
-        const response = await axios.get('/api/reasons');
-        reasons.value = response.data;
-    } catch (error) {
-        console.error('Error fetching reasons:', error);
-    }
+const handleCancellation = (selectedReason) => {
+    console.log('Order cancelled with reason:', selectedReason);
+    cancelDialogVisible.value = false;
 };
 </script>
 
