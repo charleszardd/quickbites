@@ -1,9 +1,6 @@
 <template>
   <v-app>
     <v-main>
-      <Sidebar :isDrawerOpen="isDrawerOpen" @update:isDrawerOpen="toggleDrawer" />
-      <Header :isDrawerOpen="isDrawerOpen" @toggle-drawer="toggleDrawer" />
-      
       <component :is="currentLayout">
         <router-view />
       </component>
@@ -17,12 +14,6 @@ import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import CustomerLayout from '@/layouts/CustomerLayout.vue';
-
-const isDrawerOpen = ref(false);
-
-const toggleDrawer = () => {
-  isDrawerOpen.value = !isDrawerOpen.value;
-};
 
 const route = useRoute();
 

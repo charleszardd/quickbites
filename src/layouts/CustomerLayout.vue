@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <Sidebar :isDrawerOpen="isDrawerOpen" @update:isDrawerOpen="toggleDrawer" />
-    <v-container>
-      <router-view />
-    </v-container>
+    <div>
+        <Sidebar :isDrawerOpen="isDrawerOpen" @update:isDrawerOpen="toggleDrawer" />
+        <Header :isDrawerOpen="isDrawerOpen" @toggle-drawer="toggleDrawer" />
 
-   
-  </div>
+        <v-container>
+            <router-view />
+        </v-container>
+
+
+    </div>
 </template>
 
 <script setup>
@@ -17,13 +19,11 @@ const isDrawerOpen = ref(false);
 const router = useRouter();
 
 const toggleDrawer = () => {
-  isDrawerOpen.value = !isDrawerOpen.value;
+    isDrawerOpen.value = !isDrawerOpen.value;
 };
 
 const logout = () => {
 
-  router.push('/auth/login');
+    router.push('/auth/login');
 };
 </script>
-
-
