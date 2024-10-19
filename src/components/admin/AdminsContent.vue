@@ -1,5 +1,6 @@
 <template>
     <div>
+        <AddAdmin />
         <v-card v-for="admin in adminStore.admins" :key="admin.id" class="custom-card">
             <v-card-title>{{ admin.first_name }} {{ admin.last_name }}</v-card-title>
             <v-card-subtitle>{{ admin.email }}</v-card-subtitle>

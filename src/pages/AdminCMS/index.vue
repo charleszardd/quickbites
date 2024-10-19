@@ -17,15 +17,16 @@
                                             <p class="description">Login to your account</p>
                                         </div>
 
-                                        <v-form @submit.prevent>
-                                            <v-text-field v-model="email" type="email" :rules="rules"
+                                        <div>
+                                            <v-text-field v-model="form.email" type="email" :rules="rules"
                                                 label="Email address" class="custom-radius" variant="outlined" />
-                                            <v-text-field v-model="password" type="password" :rules="rules"
+                                            <v-text-field v-model="form.password" type="password" :rules="rules"
                                                 label="Password" class="custom-radius" variant="outlined" />
-                                            <v-btn class="my-2 custom-radius" height="50px" color="primary"
-                                                type="submit" block>Sign in</v-btn>
+                                            <v-btn type="submit" @click="login" :loading="loading"
+                                                class="my-2 custom-radius" height="50px" color="primary" block>Sign
+                                                in</v-btn>
                                             <router-link>Forgot password?</router-link>
-                                        </v-form>
+                                        </div>
                                     </v-col>
                                 </v-col>
                             </div>
@@ -42,7 +43,49 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+import axios from "axios";
+import { setAuth } from "./adminAuthServiceProvider/adminAuthService";
 
+const loading = ref(false);
+const form = ref({
+    email: "",
+    password: "",
+});
+
+const login = async () => {
+    loading.value = true;
+    try {
+        const response = await axios.post("/api/admin/login", {
+            email: form.value.email,
+            password: form.value.password,
+        });
+
+        if (
+            response &&
+            response.data &&
+            response.data.token &&
+            response.data.customer
+        ) {
+            setAuth(response.data.token, response.data.customer);
+            window.$snackbar("Successful! Logging in...", `success`);
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 3000);
+        } else {
+            window.$snackbar(`Oops! Something went wrong.`, "error");
+        }
+    } catch (error) {
+        if (error.response) {
+            error.response.data.message ||
+                window.$snackbar("Invalid credentials!", "error");
+        } else {
+            window.$snackbar("Invalid credentials!", "error");
+        }
+    } finally {
+        loading.value = false;
+    }
+};
 </script>
 
 <style scoped>

@@ -4,36 +4,18 @@
       <v-col cols="12" sm="8" md="4" class="login-col">
         <div class="text-h6 mb-5">Login</div>
 
-        <v-text-field
-          v-model="form.email"
-          type="email"
-          label="Enter your email address"
-          variant="outlined"
-          class="custom-radius"
-        ></v-text-field>
+        <v-text-field v-model="form.email" type="email" label="Enter your email address" variant="outlined"
+          class="custom-radius"></v-text-field>
 
-        <v-text-field
-          v-model="form.password"
-          type="password"
-          class="custom-radius"
-          label="Enter your email address"
-          variant="outlined"
-        ></v-text-field>
+        <v-text-field v-model="form.password" type="password" class="custom-radius" label="Enter your email address"
+          variant="outlined"></v-text-field>
 
-        <v-btn
-          type="submit"
-          @click="login"
-          :loading="loading"
-          height="53"
-          class="button-text w-100 mt-2"
-          >Sign In</v-btn
-        >
+        <v-btn type="submit" @click="login" :loading="loading" height="53" class="button-text w-100 mt-2">Sign
+          In</v-btn>
         <div class="mt-4">
           <p>
             Don't have an account?
-            <router-link to="/auth/register" class="register-link"
-              >Sign Up</router-link
-            >
+            <router-link to="/auth/register" class="register-link">Sign Up</router-link>
           </p>
         </div>
       </v-col>
@@ -92,6 +74,7 @@ const login = async () => {
   background-color: #171826;
   color: white;
 }
+
 .register-link {
   text-decoration: underline;
   color: #171826;
