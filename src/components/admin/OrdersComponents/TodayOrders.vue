@@ -6,31 +6,38 @@
         <v-row v-if="error">
             <p>{{ error }}</p>
         </v-row>
-        <v-row v-if="!loading && !error && filteredOrders.length === 0">
+        <v-row v-if="!loading && !error && orders.length === 0">
             <p>No orders available for today.</p>
         </v-row>
-        <v-row v-if="!loading && !error && filteredOrders.length > 0">
-            <OrderCard v-for="order in filteredOrders" :key="order.id" :order="order" />
+        <v-row v-if="!loading && !error && orders.length > 0">
+            <OrderCard v-for="order in orders" :key="order.id" :order="order" />
         </v-row>
     </v-col>
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue';
-import { useOrderStore } from '@/stores/Admin/OrderPinia';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
-const orderStore = useOrderStore();
-const { orders, fetchOrders, loading, error } = orderStore;
+const loading = ref(true);
+const error = ref(null);
+const orders = ref([]);
 
-const today = new Date().toISOString().split('T')[0];
+const fetchTodayOrders = async () => {
+    loading.value = true;
+    try {
+        const response = await axios.get('/api/orders/today');
+        orders.value = response.data;
+    } catch (err) {
+        error.value = 'Failed to fetch today’s orders. Please try again.';
+        console.error(err);
+    } finally {
+        loading.value = false;
+    }
+};
 
-const filteredOrders = computed(() => {
-    return orders.filter(order => {
-        return order.created_at.split('T')[0] === today;
-    });
-});
-
-onMounted(() => {
-    fetchOrders();
-});
+onMounted(fetchTodayOrders);
+defineExpose({ fetchTodayOrders });
 </script>
+
+<style></style>

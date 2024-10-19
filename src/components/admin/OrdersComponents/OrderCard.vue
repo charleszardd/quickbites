@@ -2,7 +2,7 @@
     <v-card class="custom-radius w-100 me-5 mb-5" :max-width="400">
         <v-col>
             <div class="d-flex flex-wrap align-center justify-space-between">
-                <h3>{{ order.customer.first_name }} {{ order.customer.last_name }}</h3>
+                <h3>{{ order.customer?.first_name || 'Unknown' }} {{ order.customer?.last_name || 'Unknown' }}</h3>
                 <div class="rounded-lg px-3 py-1 bg-pending">
                     <p>
                         <v-icon>mdi-receipt-clock-outline</v-icon>

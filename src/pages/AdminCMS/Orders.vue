@@ -20,22 +20,22 @@
 
                                     <v-spacer></v-spacer>
 
-                                    <RefreshButton @refresh="fetchData" :loading="loading" class="me-3" />
+                                    <RefreshButton @refresh="refreshOrders" :loading="loading" class="me-3" />
                                     <ManualOrder />
-
                                 </v-row>
                             </v-col>
 
                             <v-card-text>
-                                <v-tabs-window v-model="tab">
-                                    <v-tabs-window-item value="today">
-                                        <TodayOrders v-if="tab === 'today'" />
-                                    </v-tabs-window-item>
+                                <v-tabs-items v-model="tab">
+                                    <v-tab-item value="today">
+                                        <TodayOrders ref="todayOrders" v-if="tab === 'today'" :loading="loading" />
+                                    </v-tab-item>
 
-                                    <v-tabs-window-item value="history">
-                                        <HistoryOrders v-if="tab === 'history'" />
-                                    </v-tabs-window-item>
-                                </v-tabs-window>
+                                    <v-tab-item value="history">
+                                        <HistoryOrders ref="historyOrders" v-if="tab === 'history'"
+                                            :loading="loading" />
+                                    </v-tab-item>
+                                </v-tabs-items>
                             </v-card-text>
                         </v-col>
                     </v-app>
@@ -47,21 +47,18 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useOrderStore } from '@/stores/Admin/OrderPinia';
 
 const tab = ref('today');
-
-const orderStore = useOrderStore();
 const loading = ref(false);
+const todayOrdersRef = ref(null);
+const historyOrdersRef = ref(null);
 
-const fetchData = async () => {
-    loading.value = true;
-    try {
-        await orderStore.fetchOrders();
-    } catch (error) {
-        console.error("Failed to fetch orders:", error);
-    } finally {
-        loading.value = false;
+// Refresh method to call child fetch methods
+const refreshOrders = () => {
+    if (tab.value === 'today' && todayOrdersRef.value) {
+        todayOrdersRef.value.fetchTodayOrders();
+    } else if (tab.value === 'history' && historyOrdersRef.value) {
+        historyOrdersRef.value.fetchHistoryOrders();
     }
 };
 </script>

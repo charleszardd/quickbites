@@ -6,27 +6,38 @@
         <v-row v-if="error">
             <p>{{ error }}</p>
         </v-row>
-        <v-row v-if="!loading && !error && filteredOrders.length === 0">
+        <v-row v-if="!loading && !error && orders.length === 0">
             <p>No orders available.</p>
         </v-row>
-        <v-row v-if="!loading && !error && filteredOrders.length > 0">
-            <OrderCard v-for="order in filteredOrders" :key="order.id" :order="order" />
+        <v-row v-if="!loading && !error && orders.length > 0">
+            <OrderCard v-for="order in orders" :key="order.id" :order="order" />
         </v-row>
     </v-col>
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue';
-import { useOrderStore } from '@/stores/Admin/OrderPinia';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
-const orderStore = useOrderStore();
-const { orders, fetchOrders, loading, error } = orderStore;
+const loading = ref(true);
+const error = ref(null);
+const orders = ref([]);
 
-const filteredOrders = computed(() => {
-    return orders;
-});
+const fetchHistoryOrders = async () => {
+    loading.value = true;
+    try {
+        const response = await axios.get('/api/orders');
+        orders.value = response.data;
+    } catch (err) {
+        error.value = 'Failed to fetch history orders. Please try again.';
+        console.error(err);
+    } finally {
+        loading.value = false;
+    }
+};
 
-onMounted(() => {
-    fetchOrders();
-});
+onMounted(fetchHistoryOrders);
+defineExpose({ fetchHistoryOrders });
 </script>
+
+<style></style>
