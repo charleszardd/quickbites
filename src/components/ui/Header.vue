@@ -12,7 +12,7 @@
         <v-spacer />
 
         <v-btn v-if="isUserAuthenticated" class="mr-5">
-          <v-icon color="primary" class="text-h6">mdi-cart</v-icon>
+          <v-icon color="primary" class="cart-icon">mdi-cart</v-icon>
         </v-btn>
 
         <v-btn v-else rounded class="button-text mr-6" to="/auth/register">Sign Up</v-btn>
@@ -42,7 +42,9 @@ const isUserAuthenticated = ref(!!localStorage.getItem("token"));
 .text-logo {
   font-size: 24px;
 }
-
+.cart-icon{
+  font-size: 24px;
+}
 .button-text {
   background-color: #171826;
   color: white;
