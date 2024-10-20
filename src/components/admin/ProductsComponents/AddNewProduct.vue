@@ -18,7 +18,7 @@
                     :rules="priceRules" variant="outlined" />
                 <v-text-field v-model="product.stock_quantity" label="Enter Stock Quantity" type="number"
                     :rules="stockQuantityRules" variant="outlined" />
-                <v-file-input v-model="product.image" label="Upload Image" prepend-icon=""
+                <v-file-input v-model="product.image" label="Upload Image (Optional)" prepend-icon=""
                     prepend-inner-icon="mdi-image" accept="image/*" :rules="imageRules" variant="outlined" />
 
                 <v-card-actions slot="actions">

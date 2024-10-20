@@ -14,7 +14,8 @@
             <tbody>
                 <tr v-for="(product, index) in products" :key="index">
                     <td class="text-left">
-                        <img :src="product.image" alt="Product Image" width="50" height="50" />
+                        <img :src="product.image_url" class="custom-radius" alt="Product Image" width="50"
+                            height="50" />
                     </td>
                     <td class="text-left">{{ product.name }}</td>
                     <td class="text-left">{{ product.stock_quantity }}</td>
