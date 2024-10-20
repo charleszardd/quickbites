@@ -1,5 +1,5 @@
 <template>
-
+    <AboutContent />
 </template>
 
 <script setup>
