@@ -17,21 +17,22 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const { token } = isLoggedIn();
+  const { token, role_id } = isLoggedIn();
   const isAuthenticated = !!token;
 
   console.log('Current Path:', to.path);
   console.log('Token:', token);
+  console.log('Role ID:', role_id);
   console.log('Is Authenticated:', isAuthenticated);
 
   const isAdminRoute = to.path.startsWith('/admincms');
 
   if (!isAuthenticated && isAdminRoute && to.path !== '/admincms') {
-    return next('/admincms');
+    return next('/admincms/dashboard');
   }
 
-  if (isAuthenticated && to.path === '/admincms') {
-    return next('/admincms/dashboard');
+  if (isAuthenticated && isAdminRoute && (Number(role_id) !== 1 && Number(role_id) !== 2)) {
+    return next('/');
   }
 
   next();
