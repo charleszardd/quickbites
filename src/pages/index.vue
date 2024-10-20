@@ -92,6 +92,5 @@ onMounted(() => {
 .category-wrapper.active {
   background-color: #ccc !important;
   border-radius: 15px;
-  padding: 5px;
 }
 </style>
