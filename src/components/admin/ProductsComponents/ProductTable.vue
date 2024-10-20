@@ -23,8 +23,10 @@
                         {{ product.stock_quantity > 0 ? 'Available' : 'Out of Stock' }}
                     </td>
                     <td class="text-left">
-                        <v-btn prepend-icon="mdi-square-edit-outline" class="custom-radius me-3" flat>Edit</v-btn>
-                        <v-btn prepend-icon="mdi-trash-can-outline" class="custom-radius" flat>Delete</v-btn>
+                        <v-btn prepend-icon="mdi-square-edit-outline" color="blue" variant="text"
+                            class="custom-radius me-3">Edit</v-btn>
+                        <v-btn prepend-icon="mdi-trash-can-outline" color="error" variant="text"
+                            class="custom-radius">Delete</v-btn>
                     </td>
                 </tr>
             </tbody>
