@@ -1,5 +1,5 @@
 <template>
-    <v-card class="w-100">
+    <v-card class="w-100 custom-radius">
         <v-table>
             <thead>
                 <tr>
@@ -23,8 +23,8 @@
                         {{ product.stock_quantity > 0 ? 'Available' : 'Out of Stock' }}
                     </td>
                     <td class="text-left">
-                        <v-btn>Edit</v-btn>
-                        <v-btn>Delete</v-btn>
+                        <v-btn prepend-icon="mdi-square-edit-outline" class="custom-radius me-3" flat>Edit</v-btn>
+                        <v-btn prepend-icon="mdi-trash-can-outline" class="custom-radius" flat>Delete</v-btn>
                     </td>
                 </tr>
             </tbody>

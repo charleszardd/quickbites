@@ -5,22 +5,19 @@
         </v-btn>
 
         <Modal v-model="modalVisible" title="Manual Order" icon="mdi-cart-outline" max-width="800px">
-            <!-- Modal Content -->
             <v-form ref="form">
-                <!-- Autocomplete to Select or Type a Customer -->
                 <v-autocomplete v-model="selectedCustomer" :items="customers" item-text="full_name" item-value="id"
                     label="Select Customer or Type a New One" return-object :search-input.sync="searchQuery" clearable
                     dense hide-details allow-overflow @update:search-input="fetchCustomers"
                     @input="onCustomerInput"></v-autocomplete>
 
-                <!-- Other Order Inputs (like products, etc.) can go here -->
                 <v-text-field v-model="orderDetails.product" label="Product" required></v-text-field>
                 <v-text-field v-model="orderDetails.quantity" label="Quantity" type="number" required></v-text-field>
 
-                <template v-slot:actions>
+                <v-card-actions slot="actions">
                     <v-btn @click="modalVisible = false">Cancel</v-btn>
                     <v-btn color="primary" @click="submitOrder">Confirm</v-btn>
-                </template>
+                </v-card-actions>
             </v-form>
         </Modal>
     </div>
