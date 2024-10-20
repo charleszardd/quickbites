@@ -65,12 +65,20 @@ const login = async () => {
             response &&
             response.data &&
             response.data.token &&
-            response.data.customer
+            response.data.admin
         ) {
-            setAuth(response.data.token, response.data.customer);
+            // Assuming the response data contains the admin's role ID
+            const { token, admin } = response.data;
+
+            // Store the token and admin role_id (or any unique identifier for the role)
+            setAuth(token, admin); // Modify this if your setAuth function needs to store role_id
+
+            // Store role_id in local storage if it's part of the admin object
+            localStorage.setItem('role_id', admin.role_id); // Ensure `role_id` exists in `admin`
+
             window.$snackbar("Successful! Logging in...", `success`);
             setTimeout(() => {
-                window.location.href = "/";
+                window.location.href = "/admincms/dashboard";
             }, 3000);
         } else {
             window.$snackbar(`Oops! Something went wrong.`, "error");
@@ -86,6 +94,7 @@ const login = async () => {
         loading.value = false;
     }
 };
+
 </script>
 
 <style scoped>

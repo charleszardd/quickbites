@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
+import { isLoggedIn } from '@/pages/AdminCMS/adminAuthServiceProvider/adminAuthService';
 import { getAuth } from '../pages/auth/authServiceProvider/authService';
 
 
@@ -18,6 +19,8 @@ const router = createRouter({
   ],
 });
 
+
+
 router.beforeEach((to, from, next) => {
   const isUserAuthenticated = !!getAuth().token;
 
@@ -32,6 +35,23 @@ router.beforeEach((to, from, next) => {
   else {
     next(); 
   }
+});
+
+router.beforeEach((to, from, next) => {
+  const { token, role_id } = isLoggedIn();
+  const isAuthenticated = !!token;
+
+  const isAdminRoute = to.path.startsWith('/admincms');
+
+  if (!isAuthenticated && isAdminRoute && to.path !== '/admincms') {
+    return next('/admincms/dashboard');
+  }
+
+  if (isAuthenticated && isAdminRoute && (Number(role_id) !== 1 && Number(role_id) !== 2)) {
+    return next('/');
+  }
+
+  next();
 });
 
 router.onError((err, to) => {
