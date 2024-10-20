@@ -1,5 +1,5 @@
 <template>
-
+<WalletContent />
 </template>
 
 <script setup>

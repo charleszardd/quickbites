@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
+import { getAuth } from '../pages/auth/authServiceProvider/authService';
+
 
 import NotFound from '@/pages/404.vue';
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,6 +16,22 @@ const router = createRouter({
       component: NotFound,
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const isUserAuthenticated = !!getAuth().token;
+
+  if (!isUserAuthenticated && (to.path === '/wallet' || to.path === '/orders')) {
+    next('/'); 
+  } 
+  
+  else if (isUserAuthenticated && (to.path === '/auth/login' || to.path === '/auth/register')) {
+    next('/'); 
+  } 
+
+  else {
+    next(); 
+  }
 });
 
 router.onError((err, to) => {

@@ -1,7 +1,7 @@
 <template>
   <v-col v-if="isUserAuthenticated">
     <v-navigation-drawer :model-value="isDrawerOpen" app temporary @update:model-value="updateDrawer">
-      <v-row align="center" class="mx-auto drawer-header px-3 py-2">
+      <v-row align="center" class="mx-auto px-3 py-2">
         <v-avatar size="40">
           <img :src="userAvatar" alt="User Avatar" />
         </v-avatar>
@@ -13,8 +13,8 @@
           </div>
         </v-col>
       </v-row>
-
-      <v-list class="item-text" density="compact">
+      <v-divider class="my-0"></v-divider>
+      <v-list class="mt-0 pt-0 item-text" density="compact">
         <v-list-item :class="{ 'active-item': isActive('/') }" height="50px" title="Menu" to="/"></v-list-item>
         <v-divider />
         <v-list-item :class="{ 'active-item': isActive('/orders') }" height="50px" title="Orders"
@@ -23,10 +23,10 @@
         <v-list-item :class="{ 'active-item': isActive('/wallet') }" height="50px" title="Wallet"
           to="/wallet"></v-list-item>
         <v-divider />
-        <v-list-item :class="{ 'active-item': isActive('/aboutUs') }" height="50px" title="About Us"
-          to="/aboutUs"></v-list-item>
+        <v-list-item :class="{ 'active-item': isActive('/about') }" height="50px" title="About Us"
+          to="/about"></v-list-item>
         <v-divider />
-        <v-list-item :class="{ 'active-item': isActive('/auth/login') }" height="50px" title="Sign Out"
+        <v-list-item height="50px" title="Sign Out"
           @click="handleLogout" to="/auth/login"></v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -37,10 +37,10 @@
       <v-row align="center" class="drawer-header mt-1"></v-row>
 
       <v-list density="compact">
-        <v-list-item :class="{ 'active-item': isActive('/') }" height="50px" title="Menu" to="/menu"></v-list-item>
+        <v-list-item :class="{ 'active-item': isActive('/') }" height="50px" title="Menu" to="/"></v-list-item>
         <v-divider />
-        <v-list-item :class="{ 'active-item': isActive('/aboutUs') }" height="50px" title="About Us"
-          to="/aboutUs"></v-list-item>
+        <v-list-item :class="{ 'active-item': isActive('/about') }" height="50px" title="About Us"
+          to="/about"></v-list-item>
         <v-divider />
         <v-list-item :class="{ 'active-item': isActive('/auth/register') }" height="50px" title="Sign Up"
           to="/auth/register"></v-list-item>
