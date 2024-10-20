@@ -67,14 +67,9 @@ const login = async () => {
             response.data.token &&
             response.data.admin
         ) {
-            // Assuming the response data contains the admin's role ID
             const { token, admin } = response.data;
-
-            // Store the token and admin role_id (or any unique identifier for the role)
-            setAuth(token, admin); // Modify this if your setAuth function needs to store role_id
-
-            // Store role_id in local storage if it's part of the admin object
-            localStorage.setItem('role_id', admin.role_id); // Ensure `role_id` exists in `admin`
+            setAuth(token, admin);
+            localStorage.setItem('role_id', admin.role_id);
 
             window.$snackbar("Successful! Logging in...", `success`);
             setTimeout(() => {

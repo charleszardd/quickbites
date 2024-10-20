@@ -19,7 +19,7 @@
                     </td>
                     <td class="text-left">{{ product.name }}</td>
                     <td class="text-left">{{ product.stock_quantity }}</td>
-                    <td class="text-left">{{ product.price }}</td>
+                    <td class="text-left">₱ {{ product.price }}</td>
                     <td class="text-left">
                         {{ product.stock_quantity > 0 ? 'Available' : 'Out of Stock' }}
                     </td>

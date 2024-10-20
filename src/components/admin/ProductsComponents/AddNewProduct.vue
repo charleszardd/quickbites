@@ -14,7 +14,7 @@
                 <v-select v-model="product.category_id" :items="categories" item-title="name" item-value="id"
                     label="Choose category for the new product" :rules="categoryRules" variant="outlined" />
                 <v-text-field v-model="product.name" label="Enter Product Name" :rules="nameRules" variant="outlined" />
-                <v-text-field v-model="product.price" label="Enter Price for the product" type="number"
+                <v-text-field v-model="product.price" label="Enter Price for the product" prefix="₱" type="number"
                     :rules="priceRules" variant="outlined" />
                 <v-text-field v-model="product.stock_quantity" label="Enter Stock Quantity" type="number"
                     :rules="stockQuantityRules" variant="outlined" />
@@ -60,7 +60,10 @@ const fetchCategories = async () => {
 };
 
 const submitProduct = async () => {
-    if (!valid.value) return;
+    if (!valid.value) {
+        window.$snackbar('Please fill in all required fields.', 'error');
+        return;
+    }
 
     const formData = createFormData(product.value);
     try {
@@ -74,9 +77,10 @@ const submitProduct = async () => {
             location.reload();
         }, 1500);
     } catch (error) {
-        handleError('Error submitting product:', error);
+        window.$snackbar(error.response.data.message || 'An error occurred.', 'error');
     }
 };
+
 
 const nameRules = [v => !!v || 'Product name is required'];
 const priceRules = [
