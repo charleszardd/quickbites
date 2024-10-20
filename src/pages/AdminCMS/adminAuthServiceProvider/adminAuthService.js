@@ -14,7 +14,6 @@ export function isLoggedIn() {
   return { token };
 }
 
-// Admin Logout Function
 export function logout() {
   localStorage.removeItem('admin-auth-token');
   localStorage.removeItem('admin');
