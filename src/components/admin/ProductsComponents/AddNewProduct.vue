@@ -5,20 +5,26 @@
         </v-btn>
 
         <Modal v-model="modalVisible" title="Add New Product" icon="mdi-plus" max-width="800px">
-            <v-form ref="form" v-model="valid" lazy-validation>
-                <v-text-field v-model="product.name" label="Product Name" :rules="nameRules"></v-text-field>
-                <v-text-field v-model="product.price" label="Price" type="number" :rules="priceRules"></v-text-field>
-                <v-text-field v-model="product.stock_quantity" label="Stock Quantity" type="number"
-                    :rules="stockQuantityRules"></v-text-field>
-                <v-file-input v-model="product.image" label="Upload Image" accept="image/*"
-                    :rules="imageRules"></v-file-input>
-                <v-select v-model="product.category_id" :items="categories" item-title="name" item-value="id"
-                    label="Select Category" :rules="categoryRules"></v-select>
+            <div v-if="productSubmissionSuccess" class="w-100">
+                <LottieAnimation :animationData="successAnimation" class="mx-auto" width="300px" height="300px" />
+                <h2 class="text-center">Product successfully added!</h2>
+            </div>
 
-                <template v-slot:actions>
+            <v-form ref="form" v-else v-model="valid" lazy-validation>
+                <v-select v-model="product.category_id" :items="categories" item-title="name" item-value="id"
+                    label="Choose category for the new product" :rules="categoryRules" variant="outlined" />
+                <v-text-field v-model="product.name" label="Enter Product Name" :rules="nameRules" variant="outlined" />
+                <v-text-field v-model="product.price" label="Enter Price for the product" type="number"
+                    :rules="priceRules" variant="outlined" />
+                <v-text-field v-model="product.stock_quantity" label="Enter Stock Quantity" type="number"
+                    :rules="stockQuantityRules" variant="outlined" />
+                <v-file-input v-model="product.image" label="Upload Image" prepend-icon=""
+                    prepend-inner-icon="mdi-image" accept="image/*" :rules="imageRules" variant="outlined" />
+
+                <v-card-actions slot="actions">
                     <v-btn @click="closeModal">Cancel</v-btn>
                     <v-btn color="primary" @click="submitProduct">Confirm</v-btn>
-                </template>
+                </v-card-actions>
             </v-form>
         </Modal>
     </div>
@@ -27,11 +33,14 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import successAnimation from "../../../Lottie/check.json";
 
 const modalVisible = ref(false);
 const valid = ref(false);
 const product = ref(createInitialProduct());
 const categories = ref([]);
+
+const productSubmissionSuccess = ref(false);
 
 const showModal = () => {
     modalVisible.value = true;
@@ -60,8 +69,10 @@ const submitProduct = async () => {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        resetProduct();
-        closeModal();
+        productSubmissionSuccess.value = true;
+        setTimeout(() => {
+            location.reload();
+        }, 1500);
     } catch (error) {
         handleError('Error submitting product:', error);
     }

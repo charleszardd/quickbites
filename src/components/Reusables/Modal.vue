@@ -12,10 +12,6 @@
             <v-card-text>
                 <slot />
             </v-card-text>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <slot name="actions" />
-            </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
