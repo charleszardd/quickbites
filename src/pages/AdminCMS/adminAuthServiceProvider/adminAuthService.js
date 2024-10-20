@@ -1,21 +1,22 @@
 export function setAuth(token, admin) {
-  localStorage.setItem('token', token);
-  localStorage.setItem('customer', JSON.stringify(admin));
-
+  localStorage.setItem('admin-auth-token', token);
+  localStorage.setItem('admin', JSON.stringify(admin));
 }
 
 export function getAuth() {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('admin-auth-token');
   const admin = JSON.parse(localStorage.getItem('admin'));
   return { token, admin };
 }
 
 export function isLoggedIn() {
-  return !!getAuth().token;
+  const token = localStorage.getItem('admin-auth-token');
+  return { token };
 }
 
+// Admin Logout Function
 export function logout() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('customer');
+  localStorage.removeItem('admin-auth-token');
+  localStorage.removeItem('admin');
   window.location.href = '/admincms';
 }

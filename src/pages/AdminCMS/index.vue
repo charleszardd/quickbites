@@ -65,12 +65,12 @@ const login = async () => {
             response &&
             response.data &&
             response.data.token &&
-            response.data.customer
+            response.data.admin
         ) {
-            setAuth(response.data.token, response.data.customer);
+            setAuth(response.data.token, response.data.admin);
             window.$snackbar("Successful! Logging in...", `success`);
             setTimeout(() => {
-                window.location.href = "/";
+                window.location.href = "/admincms/dashboard";
             }, 3000);
         } else {
             window.$snackbar(`Oops! Something went wrong.`, "error");
