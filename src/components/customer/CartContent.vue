@@ -46,7 +46,6 @@
       v-if="cartProducts.length === 0"
       style="justify-content: center; align-items: center"
     >
-   
     </v-row>
 
     <v-row class="flex-grow-1" v-else>
@@ -69,14 +68,14 @@
             <v-card-title class="text-subtitle-1">{{
               product.name
             }}</v-card-title>
-             <v-row>
+            <v-row>
               <v-btn variant="text" @click="decrementQuantity(product.id)" icon>
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
               <v-card-title>
                 {{ product.quantity }}
               </v-card-title>
-              <v-btn variant="text"  @click="incrementQuantity(product.id)" icon>
+              <v-btn variant="text" @click="incrementQuantity(product.id)" icon>
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </v-row>
@@ -85,25 +84,40 @@
           <v-card-subtitle class="text-subtitle-2">{{
             "₱" + product.price.toFixed(2)
           }}</v-card-subtitle>
-          
         </v-row>
       </v-col>
     </v-row>
- 
-  <v-row v-if="cartProducts.length ===  0" class="empty-holder justify-center align-center d-flex">
-    <LottieAnimation :animationData="animationData" width="300px" height="300px" />
-            <span class="empty-title my-2">Your cart is empty.</span>
-            <v-btn variant="text"><router-link color="primary" class="back-menu-link" to="/">Go back to menu to order</router-link></v-btn>
-</v-row>
-<v-row v-else class="justify-space-between align-center px-4">
-     <v-divider ></v-divider>
-    <p class="my-5" >Total: </p>
-    <p>₱ {{ calculateTotal(cartProducts) }}</p>
-</v-row>
+
+    <v-row
+      v-if="cartProducts.length === 0"
+      class="empty-holder justify-center align-center d-flex"
+    >
+      <LottieAnimation
+        :animationData="animationData"
+        width="300px"
+        height="300px"
+      />
+      <span class="empty-title my-2">Your cart is empty.</span>
+      <v-btn variant="text"
+        ><router-link color="primary" class="back-menu-link" to="/"
+          >Go back to menu to order</router-link
+        ></v-btn
+      >
+    </v-row>
+    <v-row v-else class="justify-space-between align-center px-4">
+      <v-divider></v-divider>
+      <p class="my-5">Total:</p>
+      <p>₱ {{ calculateTotal(cartProducts) }}</p>
+    </v-row>
 
     <v-col v-if="cartProducts.length > 0" class="bottom-section pb-0">
       <v-divider class="divider mb-3"></v-divider>
-      <v-btn class="custom-radius w-100 mb-3" height="50" color="black" to="/checkout">
+      <v-btn
+        class="custom-radius w-100 mb-3"
+        height="50"
+        color="black"
+        to="/checkout"
+      >
         Proceed to checkout
       </v-btn>
       <v-btn
@@ -122,8 +136,8 @@
 import { cart } from "@/stores/cart";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { calculateTotal } from '@/utils/helpers';
-import Empty from '@/Lottie/empty.json'
+import { calculateTotal } from "@/utils/helpers";
+import Empty from "@/Lottie/empty.json";
 
 const animationData = ref(Empty);
 const router = useRouter();
@@ -177,24 +191,23 @@ const totalAmount = computed(() => {
   bottom: 0;
   position: absolute;
   right: 0;
-  
 }
 .flex-grow-1 {
   flex-grow: 1;
 }
-.empty-holder{
-    flex-direction: column;
-    margin-top: 130px!important;
+.empty-holder {
+  flex-direction: column;
+  margin-top: 130px !important;
 }
-.empty-title{
-    font-size: 20px;
+.empty-title {
+  font-size: 20px;
 }
-.back-menu-link{
-    text-decoration: none;
-    font-size: 20px;
-    color: #FC8019;
+.back-menu-link {
+  text-decoration: none;
+  font-size: 20px;
+  color: #fc8019;
 }
-.back-menu-link:hover{
-    text-decoration: underline;
+.back-menu-link:hover {
+  text-decoration: underline;
 }
 </style>
