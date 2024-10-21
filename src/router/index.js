@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
+import someRoutes from './someRoutes';
 import { isLoggedIn } from '@/pages/AdminCMS/adminAuthServiceProvider/adminAuthService';
 import { getAuth } from '../pages/auth/authServiceProvider/authService';
 
@@ -12,14 +13,15 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     ...setupLayouts(routes),
+    ...someRoutes,
     {
       path: '/:pathMatch(.*)*',
       component: NotFound,
     },
+  
   ],
+  
 });
-
-
 
 router.beforeEach((to, from, next) => {
   const isUserAuthenticated = !!getAuth().token;

@@ -1,0 +1,146 @@
+<template>
+  <v-col class="mx-0 px-1">
+    <h3 class="mb-2">{{ categoryName }}</h3>
+
+    <v-row v-if="loading">
+      <v-col>
+        <p>Loading products...</p>
+      </v-col>
+    </v-row>
+
+    <v-row v-else-if="hasProducts">
+      <v-col
+        v-for="product in products"
+        :key="product.id"
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-card
+          class="custom-radius product-card py-2"
+          height="70"
+          :class="{ disabled: product.status_id === 2 }"
+        >
+          <v-card class="custom-radius ml-3 product-image-holder">
+            <v-img
+              :src="product.image"
+              alt="Product Image"
+              class="product-image"
+            />
+          </v-card>
+          <v-col class="pa-0">
+            <v-card-title class="text-subtitle-1 py-0">{{
+              product.name
+            }}</v-card-title>
+            <v-card-subtitle class="text-subtitle-2 py-0">{{
+              "₱" + product.price.toFixed(2)
+            }}</v-card-subtitle>
+            <v-card-subtitle class="text-subtitle-2 py-0">{{
+              statusMapping[product.status_id]
+            }}</v-card-subtitle>
+          </v-col>
+          <v-btn
+            @click.prevent="addToCart(product)"
+            color="primary add-button"
+            size=""
+            height="100"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-row v-else>
+      <v-col>
+        <p>No products available for this category.</p>
+      </v-col>
+    </v-row>
+  </v-col>
+</template>
+<script setup>
+import { ref, watch, onMounted, computed } from "vue";
+import axios from "axios";
+import { cart } from "@/stores/cart";
+
+const props = defineProps({
+  categoryId: Number,
+  categories: {
+    type: Array,
+    required: true,
+  },
+});
+
+const products = ref([]);
+const loading = ref(false);
+
+const categoryName = computed(() => {
+  if (!props.categories) return "Unknown Category";
+  const category = props.categories.find((cat) => cat.id === props.categoryId);
+  return category ? category.name : "Unknown Category";
+});
+
+const statusMapping = {
+  1: "Available",
+  2: "Sold Out",
+};
+
+const fetchProducts = async (categoryId) => {
+  if (!categoryId) return;
+
+  loading.value = true;
+  try {
+    const response = await axios.get(`/api/categories/${categoryId}/products`);
+    products.value = response.data;
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+watch(
+  () => props.categoryId,
+  (newCategoryId) => {
+    fetchProducts(newCategoryId);
+  }
+);
+
+onMounted(() => {
+  if (props.categoryId) {
+    fetchProducts(props.categoryId);
+  }
+});
+
+const hasProducts = computed(() => {
+  return products.value.length > 0;
+});
+
+const addToCart = (product) => {
+  cart.addProduct(product);
+};
+</script>
+<style scoped>
+.product-card {
+  transition: 0.3s ease;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.product-card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.product-image-holder {
+  width: 50px;
+  height: 50px;
+}
+.product-image {
+  width: 100%;
+  height: auto;
+}
+.add-button {
+  width: 40px !important;
+}
+</style>
