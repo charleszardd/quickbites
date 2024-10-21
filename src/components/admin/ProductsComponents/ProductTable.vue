@@ -17,17 +17,41 @@
                         <img :src="product.image_url" class="custom-radius" alt="Product Image" width="50"
                             height="50" />
                     </td>
-                    <td class="text-left">{{ product.name }}</td>
-                    <td class="text-left">{{ product.stock_quantity }}</td>
-                    <td class="text-left">₱ {{ product.price }}</td>
+
+                    <td class="text-left">
+                        <div v-if="!product.isEditing">{{ product.name }}</div>
+                        <v-text-field v-else v-model="product.name" label="Edit Name" />
+                    </td>
+
+                    <td class="text-left">
+                        <div v-if="!product.isEditing">{{ product.stock_quantity }}</div>
+                        <v-text-field v-else v-model="product.stock_quantity" label="Edit Quantity" type="number" />
+                    </td>
+
+                    <td class="text-left">
+                        <div v-if="!product.isEditing">₱ {{ product.price }}</div>
+                        <v-text-field v-else v-model="product.price" label="Edit Price" type="number" />
+                    </td>
+
                     <td class="text-left">
                         {{ product.stock_quantity > 0 ? 'Available' : 'Out of Stock' }}
                     </td>
+
                     <td class="text-left">
-                        <v-btn prepend-icon="mdi-square-edit-outline" color="blue" variant="text"
-                            class="custom-radius me-3">Edit</v-btn>
-                        <v-btn prepend-icon="mdi-trash-can-outline" color="error" variant="text"
-                            class="custom-radius">Delete</v-btn>
+                        <v-btn v-if="!product.isEditing" @click="toggleEdit(product)"
+                            prepend-icon="mdi-square-edit-outline" color="blue" variant="text"
+                            class="custom-radius me-3">
+                            Edit
+                        </v-btn>
+                        <v-btn v-else @click="updateProduct(product)" prepend-icon="mdi-check" color="green"
+                            variant="text" class="custom-radius me-3">
+                            Update
+                        </v-btn>
+
+                        <v-btn @click="deleteProduct(product.id)" prepend-icon="mdi-trash-can-outline" color="error"
+                            variant="text" class="custom-radius">
+                            Delete
+                        </v-btn>
                     </td>
                 </tr>
             </tbody>
@@ -38,9 +62,15 @@
 <script setup>
 import { defineProps } from 'vue';
 
-defineProps({
+const { products, updateProduct, deleteProduct } = defineProps({
     products: Array,
+    updateProduct: Function,
+    deleteProduct: Function,
 });
+
+const toggleEdit = (product) => {
+    product.isEditing = !product.isEditing;
+};
 </script>
 
 <style scoped></style>

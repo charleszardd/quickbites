@@ -10,7 +10,7 @@
             <p>No products available.</p>
         </v-row>
         <v-row>
-            <ProductTable :products="products" />
+            <ProductTable :products="products" :updateProduct="updateProduct" :deleteProduct="deleteProduct" />
         </v-row>
     </v-col>
 </template>
@@ -33,6 +33,35 @@ const fetchProducts = async () => {
         console.error(err);
     } finally {
         loading.value = false;
+    }
+};
+
+const updateProduct = async (product) => {
+    try {
+        await axios.put(`/api/products/${product.id}`, {
+            name: product.name,
+            stock_quantity: product.stock_quantity,
+            price: product.price,
+        });
+        window.$snackbar('Product updated successfully', 'success');
+        product.isEditing = false; // Turn off edit mode after successful update
+    } catch (error) {
+        if (error.response && error.response.data) {
+            window.$snackbar(error.response.data.message || 'An error occurred while updating the product.', 'error');
+        } else {
+            window.$snackbar('An unknown error occurred. Please try again later.', 'error');
+        }
+    }
+};
+
+// Function to delete a product
+const deleteProduct = async (productId) => {
+    try {
+        await axios.delete(`/api/products/${productId}`);
+        window.$snackbar('Product deleted successfully', 'success');
+        products.value = products.value.filter(product => product.id !== productId); // Remove from local products array
+    } catch (error) {
+        window.$snackbar(error.response.data.message || 'An error occurred while deleting the product.', 'error');
     }
 };
 
