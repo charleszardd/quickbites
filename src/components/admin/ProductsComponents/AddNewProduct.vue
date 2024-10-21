@@ -107,7 +107,11 @@ function createInitialProduct() {
 function createFormData(product) {
     const formData = new FormData();
     Object.entries(product).forEach(([key, value]) => {
-        formData.append(key, value);
+        if (value instanceof File) {
+            formData.append(key, value);
+        } else if (value !== null && value !== '') {
+            formData.append(key, value);
+        }
     });
     return formData;
 }
