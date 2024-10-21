@@ -1,5 +1,6 @@
 <template>
-    <v-card class="custom-radius w-100 me-5 mb-5" :max-width="400">
+    <v-card class="custom-radius w-100 me-5 mb-5" :max-width="400"
+        :style="{ opacity: order.order_status.name === 'Complete' ? 0.5 : 1 }">
         <v-col>
             <div class="d-flex flex-wrap align-center justify-space-between">
                 <h3>{{ order.customer?.first_name || 'Unknown' }} {{ order.customer?.last_name || 'Unknown' }}</h3>
