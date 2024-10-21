@@ -1,9 +1,9 @@
 <template>
     <v-dialog v-model="isVisible" persistent>
-        <v-card>
+        <v-card :style="{ height, width }">
             <v-card-title class="d-flex align-center justify-space-between">
                 <div>
-                    <v-icon>{{ icon }}</v-icon>
+                    <v-icon class="me-3">{{ icon }}</v-icon>
                     <b class="headline">{{ title }}</b>
                 </div>
 
@@ -31,6 +31,14 @@ const props = defineProps({
     modelValue: {
         type: Boolean,
         default: false,
+    },
+    height: {
+        type: String,
+        default: 'auto',
+    },
+    width: {
+        type: String,
+        default: 'auto',
     },
 });
 

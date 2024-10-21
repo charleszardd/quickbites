@@ -20,3 +20,35 @@
 .pending {
     color: #9F9F9E;
 }
+
+.bg-in-progress {
+    background-color: #FFEDBD;
+}
+
+.in-progress {
+    color: #FFEDBD;
+}
+
+.bg-ready {
+    background-color: #C8FFE4;
+}
+
+.ready {
+    color: #C8FFE4;
+}
+
+.bg-complete {
+    background-color: #E0EBFF;
+}
+
+.complete {
+    color: #E0EBFF;
+}
+
+.bg-cancelled {
+    background-color: #EF5350;
+}
+
+.cancelled {
+    color: #EF5350;
+}

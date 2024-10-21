@@ -3,10 +3,34 @@
         <v-col>
             <div class="d-flex flex-wrap align-center justify-space-between">
                 <h3>{{ order.customer?.first_name || 'Unknown' }} {{ order.customer?.last_name || 'Unknown' }}</h3>
-                <div class="rounded-lg px-3 py-1 bg-pending">
+                <div v-if="order.order_status.name === 'Pending'" class="rounded-lg px-3 py-1 bg-pending">
                     <p>
                         <v-icon>mdi-receipt-clock-outline</v-icon>
-                        {{ order.order_status.name }}
+                        Pending
+                    </p>
+                </div>
+                <div v-if="order.order_status.name === 'In progress'" class="rounded-lg px-3 py-1 bg-in-progress">
+                    <p>
+                        <v-icon>mdi-timer-outline</v-icon>
+                        In progress
+                    </p>
+                </div>
+                <div v-if="order.order_status.name === 'Ready for pick-up'" class="rounded-lg px-3 py-1 bg-ready">
+                    <p>
+                        <v-icon>mdi-check-all</v-icon>
+                        Ready
+                    </p>
+                </div>
+                <div v-if="order.order_status.name === 'Complete'" class="rounded-lg px-3 py-1 bg-complete">
+                    <p>
+                        <v-icon>mdi-receipt-text-check-outline</v-icon>
+                        Complete
+                    </p>
+                </div>
+                <div v-if="order.order_status.name === 'Cancelled'" class="rounded-lg px-3 py-1 bg-cancelled">
+                    <p>
+                        <v-icon>mdi-cancel</v-icon>
+                        Cancelled
                     </p>
                 </div>
             </div>
@@ -17,9 +41,25 @@
                     }},
                     Paid</span>
                 <div>
-                    <span class="pending">
+                    <span v-if="order.order_status.name === 'Pending'" class="pending">
                         <v-icon>mdi-circle-medium</v-icon>
                         Incoming Order
+                    </span>
+                    <span v-if="order.order_status.name === 'In progress'" class="pending">
+                        <v-icon class="in-progress">mdi-circle-medium</v-icon>
+                        Preparing Order
+                    </span>
+                    <span v-if="order.order_status.name === 'Ready for pick-up'" class="pending">
+                        <v-icon class="ready">mdi-circle-medium</v-icon>
+                        Ready for pick-up
+                    </span>
+                    <span v-if="order.order_status.name === 'Complete'" class="pending">
+                        <v-icon class="complete">mdi-circle-medium</v-icon>
+                        Order picked-up
+                    </span>
+                    <span v-if="order.order_status.name === 'Cancelled'" class="pending">
+                        <v-icon class="cancelled">mdi-circle-medium</v-icon>
+                        Cancelled Order
                     </span>
                 </div>
             </div>
@@ -60,14 +100,53 @@
             </div>
 
             <v-col>
-                <v-row class="action-buttons mt-auto">
+                <v-row v-if="order.order_status.name === 'Pending'" class="action-buttons mt-auto">
+                    <v-btn @click="showCancelDialog" class="custom-radius" color="primary" variant="tonal" height="50px"
+                        width="25%" flat>
+                        Cancel
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="acceptOrder" class="custom-radius" color="primary" height="50px" width="70%" flat>
+                        Accept
+                    </v-btn>
+                </v-row>
+
+                <v-row v-if="order.order_status.name === 'In progress'" class="action-buttons mt-auto">
+                    <v-btn @click="showCancelDialog" class="custom-radius" color="primary" variant="tonal" height="50px"
+                        width="25%" flat>
+                        Cancel
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="markAsReady" class="custom-radius" color="primary" height="50px" width="70%" flat>
+                        Mark as Ready
+                    </v-btn>
+                </v-row>
+
+                <v-row v-if="order.order_status.name === 'Ready for pick-up'" class="action-buttons mt-auto">
+                    <v-btn @click="showCancelDialog" class="custom-radius" color="primary" variant="tonal" height="50px"
+                        width="25%" flat>
+                        Cancel
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="markAsComplete" class="custom-radius" color="primary" height="50px" width="70%" flat>
+                        Mark as Complete
+                    </v-btn>
+                </v-row>
+
+                <v-row v-if="order.order_status.name === 'Complete'" class="action-buttons mt-auto">
                     <v-btn @click="showCancelDialog" class="custom-radius" color="primary" variant="tonal" height="50px"
                         width="25%" flat>
                         Cancel
                     </v-btn>
                     <v-spacer></v-spacer>
                     <v-btn class="custom-radius" color="primary" height="50px" width="70%" flat>
-                        Accept
+                        View Details
+                    </v-btn>
+                </v-row>
+
+                <v-row v-if="order.order_status.name === 'Cancelled'" class="action-buttons mt-auto">
+                    <v-btn class="custom-radius" color="primary" height="50px" width="70%" flat disabled>
+                        Order Cancelled
                     </v-btn>
                 </v-row>
             </v-col>
@@ -79,8 +158,9 @@
 
 <script setup>
 import { ref, defineProps } from 'vue';
+import axios from 'axios';
 
-defineProps({
+const { order } = defineProps({
     order: Object,
 });
 
@@ -90,11 +170,53 @@ const showCancelDialog = () => {
     cancelDialogVisible.value = true;
 };
 
-const handleCancellation = (selectedReason) => {
-    console.log('Order cancelled with reason:', selectedReason);
-    cancelDialogVisible.value = false;
+const handleCancellation = async (selectedReason) => {
+    try {
+        await axios.patch(`/api/orders/${order.id}/status`, {
+            status: 'cancel',
+            reason_id: selectedReason
+        });
+        console.log('Order cancelled with reason:', selectedReason);
+        cancelDialogVisible.value = false;
+        order.order_status.name = 'Cancelled';
+        order.reason = { description: selectedReason };
+    } catch (error) {
+        console.error('Error cancelling the order:', error);
+    }
+};
+
+const acceptOrder = async () => {
+    try {
+        await axios.patch(`/api/orders/${order.id}/status`, { status: 'accept' });
+        console.log('Order accepted');
+        order.order_status.name = 'In progress';
+    } catch (error) {
+        console.error('Error accepting the order:', error);
+    }
+};
+
+const markAsReady = async () => {
+    try {
+        await axios.patch(`/api/orders/${order.id}/status`, { status: 'ready' });
+        console.log('Order marked as ready');
+        order.order_status.name = 'Ready for pick-up';
+    } catch (error) {
+        console.error('Error marking the order as ready:', error);
+    }
+};
+
+const markAsComplete = async () => {
+    try {
+        await axios.patch(`/api/orders/${order.id}/status`, { status: 'complete' });
+        console.log('Order marked as complete');
+        order.order_status.name = 'Complete';
+    } catch (error) {
+        console.error('Error marking the order as complete:', error);
+    }
 };
 </script>
+
+
 
 <style scoped>
 .v-table td,

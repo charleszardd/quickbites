@@ -6,10 +6,10 @@
             <v-checkbox v-model="selectedReasons" :label="reason.description" :value="reason" :key="reason.id" />
         </div>
 
-        <template v-slot:actions>
+        <v-card-actions slot="actions">
             <v-btn @click="dialogVisible = false">Cancel</v-btn>
             <v-btn color="primary" @click="confirmCancellation">Confirm</v-btn>
-        </template>
+        </v-card-actions>
     </Modal>
 </template>
 
