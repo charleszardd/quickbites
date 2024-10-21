@@ -4,7 +4,12 @@
             <v-layout>
                 <v-main>
                     <v-app class="px-5 py-5">
-                        <DashboardContent />
+                        <v-col>
+                            <v-col>
+                                <h1 class="page-title">Dashboard</h1>
+                            </v-col>
+                            <DashboardContent />
+                        </v-col>
                     </v-app>
                 </v-main>
             </v-layout>
