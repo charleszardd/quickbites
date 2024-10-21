@@ -2,7 +2,7 @@
     <v-row class="mt-1 mb-5">
         <v-row class="justify-center ">
 
-            <v-text-field v-model="localSearchQuery" class="w-100 custom-radius" height="30px" :label="searchLabel"
+            <v-text-field v-model="localSearchQuery" class="custom-radius w-100" height="30px" :label="searchLabel"
                 prepend-inner-icon="mdi-magnify" variant="outlined" hide-details="auto" @input="emitSearchQuery" />
         </v-row>
     </v-row>

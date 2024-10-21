@@ -18,9 +18,10 @@
         </div>
       </div>
     </v-row>
-
+   
+    
   </v-container>
-
+ <CategoryContent :categoryId="activeCategory" v-if="activeCategory" :categories="categories"/>
 </template>
 
 

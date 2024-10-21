@@ -26,7 +26,7 @@
         <v-list-item :class="{ 'active-item': isActive('/about') }" height="50px" title="About Us"
           to="/about"></v-list-item>
         <v-divider />
-        <v-list-item height="50px" title="Sign Out"
+        <v-list-item :class="{ 'active-item': isActive('/auth/login') }" height="50px" title="Sign Out"
           @click="handleLogout" to="/auth/login"></v-list-item>
       </v-list>
     </v-navigation-drawer>

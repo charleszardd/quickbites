@@ -1,7 +1,7 @@
 <template>
     <div>
         <Sidebar :isDrawerOpen="isDrawerOpen" @update:isDrawerOpen="toggleDrawer" />
-        <Header :isDrawerOpen="isDrawerOpen" @toggle-drawer="toggleDrawer" />
+        <Header v-if="!isCartPage" :isDrawerOpen="isDrawerOpen" @toggle-drawer="toggleDrawer" />
         <v-container>
             <router-view />
         </v-container>
@@ -9,7 +9,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const isCartPage = computed(() => {
+    console.log('Current route path:', route.path); 
+    return route.path.toLowerCase() === '/cart';
+});
 
 const isDrawerOpen = ref(false);
 

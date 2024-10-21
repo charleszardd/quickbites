@@ -11,9 +11,7 @@
 
         <v-spacer />
 
-        <v-btn v-if="isUserAuthenticated" class="mr-5">
-          <v-icon color="primary" class="cart-icon">mdi-cart</v-icon>
-        </v-btn>
+             <CartNotifier v-if="isUserAuthenticated" />
 
         <v-btn v-else rounded class="button-text mr-6" to="/auth/register">Sign Up</v-btn>
       </v-row>
