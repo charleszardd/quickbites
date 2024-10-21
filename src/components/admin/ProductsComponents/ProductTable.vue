@@ -14,8 +14,10 @@
             <tbody>
                 <tr v-for="(product, index) in products" :key="index">
                     <td class="text-left">
-                        <img :src="product.image_url" class="custom-radius" alt="Product Image" width="50"
-                            height="50" />
+                        <v-card height="80" width="80">
+                            <v-img :src="product.image" class="custom-radius" alt="Product Image" width="100%"
+                                height="100%" cover />
+                        </v-card>
                     </td>
 
                     <td class="text-left">

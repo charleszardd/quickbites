@@ -7,11 +7,14 @@
           <v-icon>mdi-menu</v-icon>
         </v-btn>
 
-        <h2 class="text-logo font-weight-bold">QuickBites</h2>
+        <h2 class="text-logo font-weight-black d-flex">
+          <div class="text-primary">Quick</div>
+          <div class="text-secondary">Bites</div>
+        </h2>
 
         <v-spacer />
 
-             <CartNotifier v-if="isUserAuthenticated" />
+        <CartNotifier v-if="isUserAuthenticated" />
 
         <v-btn v-else rounded class="button-text mr-6" to="/auth/register">Sign Up</v-btn>
       </v-row>
@@ -40,9 +43,11 @@ const isUserAuthenticated = ref(!!localStorage.getItem("token"));
 .text-logo {
   font-size: 24px;
 }
-.cart-icon{
+
+.cart-icon {
   font-size: 24px;
 }
+
 .button-text {
   background-color: #171826;
   color: white;
