@@ -31,23 +31,25 @@
                             <v-card-text>
                                 <v-tabs-items v-model="tab">
                                     <v-tab-item value="meals">
-                                        <Meals v-if="tab === 'meals'" :loading="loading" />
+                                        <ProductCategory v-if="tab === 'meals'" category="meals" />
                                     </v-tab-item>
+
                                     <v-tab-item value="snacks">
-                                        <Snacks v-if="tab === 'snacks'" :loading="loading" />
+                                        <ProductCategory v-if="tab === 'snacks'" category="snacks" />
                                     </v-tab-item>
                                     <v-tab-item value="chips">
-                                        <Chips v-if="tab === 'chips'" :loading="loading" />
+                                        <ProductCategory v-if="tab === 'chips'" category="chips" />
                                     </v-tab-item>
                                     <v-tab-item value="candies">
-                                        <Candies v-if="tab === 'candies'" :loading="loading" />
+                                        <ProductCategory v-if="tab === 'candies'" category="candies" />
                                     </v-tab-item>
                                     <v-tab-item value="drinks">
-                                        <Drinks v-if="tab === 'drinks'" :loading="loading" />
+                                        <ProductCategory v-if="tab === 'drinks'" category="drinks" />
                                     </v-tab-item>
                                     <v-tab-item value="supplies">
-                                        <Supplies v-if="tab === 'supplies'" :loading="loading" />
+                                        <ProductCategory v-if="tab === 'supplies'" category="supplies" />
                                     </v-tab-item>
+
                                 </v-tabs-items>
                             </v-card-text>
                         </v-col>
@@ -59,21 +61,11 @@
 </template>
 
 <script setup>
+import ProductCategory from '@/components/admin/ProductsComponents/ProductCategory.vue';
 import { ref } from 'vue';
 
 const tab = ref('meals');
 const loading = ref(false);
-/* const todayOrdersRef = ref(null);
-const historyOrdersRef = ref(null);
-
-// Refresh method to call child fetch methods
-const refreshOrders = () => {
-    if (tab.value === 'today' && todayOrdersRef.value) {
-        todayOrdersRef.value.fetchTodayOrders();
-    } else if (tab.value === 'history' && historyOrdersRef.value) {
-        historyOrdersRef.value.fetchHistoryOrders();
-    }
-}; */
 </script>
 
 <style></style>

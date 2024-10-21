@@ -16,8 +16,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineProps } from 'vue';
 import axios from 'axios';
+
+const props = defineProps({
+    category: {
+        type: String,
+        required: true,
+    },
+});
 
 const loading = ref(true);
 const error = ref(null);
@@ -26,10 +33,10 @@ const products = ref([]);
 const fetchProducts = async () => {
     loading.value = true;
     try {
-        const response = await axios.get('/api/products?category=meals');
+        const response = await axios.get(`/api/products?category=${props.category}`);
         products.value = response.data.products;
     } catch (err) {
-        error.value = 'Failed to fetch meals. Please try again.';
+        error.value = `Failed to fetch ${props.category}. Please try again.`;
         console.error(err);
     } finally {
         loading.value = false;
@@ -44,7 +51,7 @@ const updateProduct = async (product) => {
             price: product.price,
         });
         window.$snackbar('Product updated successfully', 'success');
-        product.isEditing = false; // Turn off edit mode after successful update
+        product.isEditing = false;
     } catch (error) {
         if (error.response && error.response.data) {
             window.$snackbar(error.response.data.message || 'An error occurred while updating the product.', 'error');
@@ -54,19 +61,17 @@ const updateProduct = async (product) => {
     }
 };
 
-// Function to delete a product
 const deleteProduct = async (productId) => {
     try {
         await axios.delete(`/api/products/${productId}`);
         window.$snackbar('Product deleted successfully', 'success');
-        products.value = products.value.filter(product => product.id !== productId); // Remove from local products array
+        products.value = products.value.filter(product => product.id !== productId);
     } catch (error) {
         window.$snackbar(error.response.data.message || 'An error occurred while deleting the product.', 'error');
     }
 };
 
 onMounted(fetchProducts);
-defineExpose({ fetchProducts });
 </script>
 
 <style></style>

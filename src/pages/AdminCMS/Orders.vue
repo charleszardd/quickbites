@@ -53,7 +53,6 @@ const loading = ref(false);
 const todayOrdersRef = ref(null);
 const historyOrdersRef = ref(null);
 
-// Refresh method to call child fetch methods
 const refreshOrders = () => {
     if (tab.value === 'today' && todayOrdersRef.value) {
         todayOrdersRef.value.fetchTodayOrders();
