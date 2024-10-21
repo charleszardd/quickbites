@@ -18,7 +18,7 @@
                         <td class="text-left">{{ customer.last_name }}, {{ customer.first_name }}</td>
                         <td class="text-left">{{ customer.email }}</td>
                         <td class="text-left">{{ customer.phone_number || 'N/A' }}</td>
-                        <td class="text-left">₱ {{ customer.balance }}</td>
+                        <td class="text-left">₱ {{ customer.balance ? customer.balance.toLocaleString() : '0' }}</td>
                         <td class="text-left">
                             <v-btn @click="openDetailsModal(customer)" prepend-icon="mdi-account-details-outline"
                                 color="primary" variant="tonal">View Details</v-btn>

@@ -30,7 +30,7 @@
                                 </v-btn>
                             </v-card-actions>
                             <v-card-title class="d-flex align-center justify-center">
-                                ₱ <h1>{{ customer.balance }}</h1>
+                                ₱ <h1>{{ customer.balance ? customer.balance.toLocaleString() : '0' }}</h1>
                             </v-card-title>
                             <v-card-text>Balance</v-card-text>
                         </div>
