@@ -4,7 +4,7 @@
             Add New Product
         </v-btn>
 
-        <Modal v-model="modalVisible" title="Add New Product" icon="mdi-plus" max-width="800px">
+        <Modal v-model="modalVisible" title="Add New Product" icon="mdi-plus" max-width="500px">
             <div v-if="productSubmissionSuccess" class="w-100">
                 <LottieAnimation :animationData="successAnimation" class="mx-auto" width="300px" height="300px" />
                 <h2 class="text-center">Product successfully added!</h2>
@@ -21,9 +21,9 @@
                 <v-file-input v-model="product.image" label="Upload Image (Optional)" prepend-icon=""
                     prepend-inner-icon="mdi-image" accept="image/*" :rules="imageRules" variant="outlined" />
 
-                <v-card-actions slot="actions">
-                    <v-btn @click="closeModal">Cancel</v-btn>
-                    <v-btn color="primary" @click="submitProduct">Confirm</v-btn>
+                <v-card-actions slot="actions" class="d-flex justify-end">
+                    <v-btn @click="closeModal" height="50">Cancel</v-btn>
+                    <v-btn class="bg-primary" @click="submitProduct" height="50">Confirm</v-btn>
                 </v-card-actions>
             </v-form>
         </Modal>

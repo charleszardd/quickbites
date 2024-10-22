@@ -4,17 +4,24 @@
             Add Admin
         </v-btn>
 
-        <Modal v-model="isModalVisible" title="Add New Admin" icon="mdi-account-plus">
+        <Modal v-model="isModalVisible" title="Add New Admin" icon="mdi-account-plus" max-width="800px">
             <v-form ref="adminForm" v-model="formValid" @submit.prevent="registerAdmin">
-                <v-text-field label="First Name" v-model="form.first_name" :rules="[rules.required]"></v-text-field>
+                <v-text-field label="Enter first name" v-model="form.first_name" :rules="[rules.required]"
+                    variant="outlined" />
 
-                <v-text-field label="Last Name" v-model="form.last_name" :rules="[rules.required]"></v-text-field>
+                <v-text-field label="Enter last name" v-model="form.last_name" :rules="[rules.required]"
+                    variant="outlined" />
 
-                <v-text-field label="Email" v-model="form.email" :rules="[rules.required, rules.email]"></v-text-field>
+                <v-text-field label="Enter email address" v-model="form.email" :rules="[rules.required, rules.email]"
+                    variant="outlined" />
 
-                <v-card-actions slot="actions">
-                    <v-btn @click="closeModal">Cancel</v-btn>
-                    <v-btn type="submit" :disabled="!formValid">Submit</v-btn>
+                <v-select label="Choose a role" :items="roleOptions" item-title="title" item-value="value"
+                    v-model="form.role_id" variant="outlined" />
+
+                <v-card-actions slot="actions" class="d-flex justify-end">
+                    <v-btn @click="closeModal" height="50">Cancel</v-btn>
+                    <v-btn type="submit" class="bg-primary" :disabled="!formValid" :loading="loading"
+                        height="50">Submit</v-btn>
                 </v-card-actions>
             </v-form>
         </Modal>
@@ -29,13 +36,21 @@ const props = defineProps({
     modelValue: Boolean,
 });
 
+const loading = ref(false);
 const emit = defineEmits(['update:modelValue', 'admin-added']);
 const isModalVisible = ref(props.modelValue);
 const form = ref({
     first_name: '',
     last_name: '',
     email: '',
+    role_id: null,
 });
+
+const roleOptions = [
+    { title: 'Admin', value: 1 },
+    { title: 'Staff', value: 2 }
+];
+
 const formValid = ref(false);
 
 const rules = {
@@ -55,17 +70,20 @@ const showModal = () => {
 const closeModal = () => {
     isModalVisible.value = false;
     emit('update:modelValue', false);
-    form.value = { first_name: '', last_name: '', email: '' };
+    form.value = { first_name: '', last_name: '', email: '', role_id: '' };
 };
 
 const registerAdmin = async () => {
+    loading.value = true;
     try {
         await axios.post('/api/admin/register', form.value);
         closeModal();
         emit('admin-added');
-        alert('Admin successfully registered');
+        window.$snackbar("Admin successfully added!", "success");
+        loading.value = false;
     } catch (error) {
         console.error('Error adding admin:', error.response.data);
+        loading.value = false;
     }
 };
 </script>

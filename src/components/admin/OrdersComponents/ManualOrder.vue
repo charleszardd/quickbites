@@ -14,9 +14,9 @@
                 <v-text-field v-model="orderDetails.product" label="Product" required></v-text-field>
                 <v-text-field v-model="orderDetails.quantity" label="Quantity" type="number" required></v-text-field>
 
-                <v-card-actions slot="actions">
-                    <v-btn @click="modalVisible = false">Cancel</v-btn>
-                    <v-btn color="primary" @click="submitOrder">Confirm</v-btn>
+                <v-card-actions slot="actions" class="d-flex justify-end">
+                    <v-btn @click="modalVisible = false" height="50">Cancel</v-btn>
+                    <v-btn class="bg-primary" @click="submitOrder" height="50">Confirm</v-btn>
                 </v-card-actions>
             </v-form>
         </Modal>
