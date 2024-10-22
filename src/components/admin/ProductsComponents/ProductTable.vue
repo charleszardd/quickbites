@@ -14,8 +14,14 @@
             <tbody>
                 <tr v-for="(product, index) in products" :key="index">
                     <td class="text-left">
-                        <img :src="product.image_url" class="custom-radius" alt="Product Image" width="50"
-                            height="50" />
+                        <v-card class="custom-radius" height="80" width="80">
+                            <v-icon v-if="product.image === null" class="bg-grey-darken-1"
+                                style="font-size: 54px; height: 100%; width: 100%;">
+                                mdi-food
+                            </v-icon>
+                            <v-img v-else :src="product.image" class="custom-radius" alt="Product Image" width="100%"
+                                height="100%" cover />
+                        </v-card>
                     </td>
 
                     <td class="text-left">

@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="isVisible" persistent>
-        <v-card :style="{ height, width }">
+        <v-card :style="{ height, width }" class="custom-radius">
             <v-card-title class="d-flex align-center justify-space-between">
                 <div>
                     <v-icon class="me-3">{{ icon }}</v-icon>

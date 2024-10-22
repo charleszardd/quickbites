@@ -2,10 +2,10 @@
   <v-menu offset-y width="400">
     <template v-slot:activator="{ props: activatorProps }">
       <v-btn icon v-bind="activatorProps" class="mr-5" to="/cart">
-        <v-badge color="error" v-if="cart.getProductCount() > 0" :content="cart.getProductCount()">
-          <v-icon color="primary">mdi-cart</v-icon>
+        <v-badge color="red" v-if="cart.getProductCount() > 0" :content="cart.getProductCount()">
+          <v-icon>mdi-cart</v-icon>
         </v-badge>
-        <v-icon color="primary" v-else>
+        <v-icon color="grey-darken-4" v-else>
           mdi-cart
         </v-icon>
       </v-btn>

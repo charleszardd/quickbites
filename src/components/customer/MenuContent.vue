@@ -1,27 +1,30 @@
 <template>
-  <v-container fluid>
-    <v-col>
-      <SearchBar />
+  <div>
+    <v-container fluid>
+      <v-col>
+        <SearchBar />
 
-    </v-col>
-    <v-row class="category-container my-3">
-      <div v-for="category in categories" :key="category.id" class="category-wrapper"
-        :class="{ active: category.id === activeCategory }">
-        <v-card :class="['category-card custom-radius', { active: category.id === activeCategory }]"
-          @click="setActiveCategory(category.id)" color="transparent" flat>
-          <v-img :src="category.image" alt="Category Image" class="category-image" />
+      </v-col>
+      <v-row class="category-container my-3">
+        <div v-for="category in categories" :key="category.id" class="category-wrapper"
+          :class="{ active: category.id === activeCategory }">
+          <v-card :class="['category-card custom-radius', { active: category.id === activeCategory }]"
+            @click="setActiveCategory(category.id)" color="transparent" flat>
+            <v-img :src="category.image" alt="Category Image" class="category-image" />
 
-        </v-card>
+          </v-card>
 
-        <div class="category-text">
-          {{ category.name }}
+          <div class="category-text">
+            {{ category.name }}
+          </div>
         </div>
-      </div>
-    </v-row>
-   
-    
-  </v-container>
- <CategoryContent :categoryId="activeCategory" v-if="activeCategory" :categories="categories"/>
+      </v-row>
+
+
+    </v-container>
+    <CategoryContent :categoryId="activeCategory" v-if="activeCategory" :categories="categories" />
+    <AllProducts v-else />
+  </div>
 </template>
 
 

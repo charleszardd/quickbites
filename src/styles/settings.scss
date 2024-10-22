@@ -52,3 +52,13 @@
 .cancelled {
     color: #EF5350;
 }
+
+.v-field--variant-outlined,
+.v-field--single-line,
+.v-field--no-label {
+    border-radius: 15px !important;
+}
+
+.v-btn {
+    border-radius: 15px !important;
+}

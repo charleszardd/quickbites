@@ -2,8 +2,9 @@
   <v-col v-if="isUserAuthenticated">
     <v-navigation-drawer :model-value="isDrawerOpen" app temporary @update:model-value="updateDrawer">
       <v-row align="center" class="mx-auto px-3 py-2">
-        <v-avatar size="40">
-          <img :src="userAvatar" alt="User Avatar" />
+        <v-avatar size="40" class="bg-grey custom-radius">
+          <v-img :src="userAvatar" alt="User Avatar" v-if="userAvatar" />
+          <v-icon v-else>mdi-account</v-icon>
         </v-avatar>
         <v-col class="ml-3">
           <div class="text-h6">{{ customerName || 'P. Diddy' }}</div>
@@ -79,6 +80,7 @@ const isActive = (path) => {
 
 const isUserAuthenticated = ref(!!localStorage.getItem("token"));
 const customerName = ref('');
+const userAvatar = ref('');
 
 const handleLogout = async () => {
   logout();
@@ -93,7 +95,8 @@ onMounted(async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    customerName.value = `${response.data.first_name} ${response.data.last_name}`;
+    customerName.value = `${response.data.first_name}`;
+    userAvatar.value = response.data.profile_picture;
   } catch (error) {
     console.error(`Error fetching customer name:`, error);
   }

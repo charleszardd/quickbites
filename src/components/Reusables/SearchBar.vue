@@ -36,6 +36,4 @@ const emit = defineEmits(['update:modelValue']);
 const emitSearchQuery = () => {
     emit('update:modelValue', localSearchQuery.value);
 };
-
-
 </script>

@@ -9,24 +9,10 @@
     </v-row>
 
     <v-row v-else-if="hasProducts">
-      <v-col
-        v-for="product in products"
-        :key="product.id"
-        cols="12"
-        sm="6"
-        md="4"
-      >
-        <v-card
-          class="custom-radius product-card py-2"
-          height="70"
-          :class="{ disabled: product.status_id === 2 }"
-        >
-          <v-card class="custom-radius ml-3 product-image-holder">
-            <v-img
-              :src="product.image"
-              alt="Product Image"
-              class="product-image"
-            />
+      <v-col v-for="product in products" :key="product.id" cols="12" sm="6" md="4">
+        <v-card class="custom-radius product-card py-2" height="90" :class="{ disabled: product.status_id === 2 }">
+          <v-card class="custom-radius product-image-holder">
+            <v-img :src="product.image" alt="Product Image" class="product-image" height="100%" width="100%" cover />
           </v-card>
           <v-col class="pa-0">
             <v-card-title class="text-subtitle-1 py-0">{{
@@ -35,16 +21,11 @@
             <v-card-subtitle class="text-subtitle-2 py-0">{{
               "₱" + product.price.toFixed(2)
             }}</v-card-subtitle>
-            <v-card-subtitle class="text-subtitle-2 py-0">{{
-              statusMapping[product.status_id]
-            }}</v-card-subtitle>
+            <v-card-subtitle class="text-subtitle-2 py-0">
+              <small>{{ statusMapping[product.status_id] }}</small>
+            </v-card-subtitle>
           </v-col>
-          <v-btn
-            @click.prevent="addToCart(product)"
-            color="primary add-button"
-            size=""
-            height="100"
-          >
+          <v-btn @click.prevent="addToCart(product)" color="primary add-button" size="" height="100">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-card>
@@ -154,20 +135,25 @@ const addToCart = async (product) => {
   align-items: center;
   flex: 1;
 }
+
 .product-card.disabled {
   opacity: 0.5;
   pointer-events: none;
   cursor: not-allowed;
 }
+
 .product-image-holder {
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
 }
+
 .product-image {
   width: 100%;
   height: auto;
 }
+
 .add-button {
   width: 40px !important;
+  border-radius: 0px !important;
 }
 </style>

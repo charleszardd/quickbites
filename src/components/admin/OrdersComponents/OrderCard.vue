@@ -1,5 +1,6 @@
 <template>
-    <v-card class="custom-radius w-100 me-5 mb-5" :max-width="400">
+    <v-card class="custom-radius w-100 me-5 mb-5" :max-width="400"
+        :style="{ opacity: order.order_status.name === 'Complete' ? 0.5 : 1 }">
         <v-col>
             <div class="d-flex flex-wrap align-center justify-space-between">
                 <h3>{{ order.customer?.first_name || 'Unknown' }} {{ order.customer?.last_name || 'Unknown' }}</h3>
@@ -176,7 +177,6 @@ const handleCancellation = async (selectedReason) => {
             status: 'cancel',
             reason_id: selectedReason
         });
-        console.log('Order cancelled with reason:', selectedReason);
         cancelDialogVisible.value = false;
         order.order_status.name = 'Cancelled';
         order.reason = { description: selectedReason };
@@ -188,7 +188,6 @@ const handleCancellation = async (selectedReason) => {
 const acceptOrder = async () => {
     try {
         await axios.patch(`/api/orders/${order.id}/status`, { status: 'accept' });
-        console.log('Order accepted');
         order.order_status.name = 'In progress';
     } catch (error) {
         console.error('Error accepting the order:', error);
@@ -198,7 +197,6 @@ const acceptOrder = async () => {
 const markAsReady = async () => {
     try {
         await axios.patch(`/api/orders/${order.id}/status`, { status: 'ready' });
-        console.log('Order marked as ready');
         order.order_status.name = 'Ready for pick-up';
     } catch (error) {
         console.error('Error marking the order as ready:', error);
@@ -208,7 +206,6 @@ const markAsReady = async () => {
 const markAsComplete = async () => {
     try {
         await axios.patch(`/api/orders/${order.id}/status`, { status: 'complete' });
-        console.log('Order marked as complete');
         order.order_status.name = 'Complete';
     } catch (error) {
         console.error('Error marking the order as complete:', error);

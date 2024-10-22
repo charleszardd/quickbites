@@ -74,7 +74,7 @@ const login = async () => {
             window.$snackbar("Successful! Logging in...", `success`);
             setTimeout(() => {
                 window.location.href = "/admincms/dashboard";
-            }, 3000);
+            }, 1000);
         } else {
             window.$snackbar(`Oops! Something went wrong.`, "error");
         }
