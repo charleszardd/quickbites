@@ -4,7 +4,7 @@
 
         <v-row v-if="hasProducts">
             <v-col v-for="product in products" :key="product.id" cols="12" sm="6" md="4">
-                <v-card class="custom-radius product-card py-2" height="70"
+                <v-card class="custom-radius product-card py-2" height="90"
                     :class="{ disabled: product.status_id === 2 }">
                     <v-card class="custom-radius product-image-holder">
                         <v-img :src="product.image" alt="Product Image" class="product-image" height="100%" width="100%"
@@ -124,5 +124,6 @@ const addToCart = (product) => {
 
 .add-button {
     width: 40px !important;
+    border-radius: 0 !important;
 }
 </style>
