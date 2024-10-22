@@ -101,32 +101,39 @@ const hasProducts = computed(() => {
 
 const addToCart = async (product) => {
   const productId = product.id;
-  
+
   if (!productQuantities.value[productId]) {
     productQuantities.value[productId] = 1;
+   
   } else {
     productQuantities.value[productId]++;
+   
   }
 
   const quantity = productQuantities.value[productId];
   const { customer } = getAuth();
-  const customerId = customer ? customer.id : null; 
+  const customerId = customer ? customer.id : null;
 
+  
   if (!customerId) {
     console.error("Customer is not logged in.");
-    return; 
-  }
+    return;
+  } 
 
   try {
-
+   
     cart.addProduct(product);
-    await axios.post(`/api/cart/${customerId}`, {
+    
+    const response = await axios.post(`/api/cart/${customerId}`, {
       items: [{ product_id: productId, quantity: quantity }]
     });
+    
   } catch (error) {
+    
     console.error("Failed to add product to cart:", error);
   }
 };
+
 </script>
 <style scoped>
 .product-card {

@@ -52,7 +52,7 @@ const login = async () => {
       window.$snackbar("Successful! Logging in...", `success`);
       setTimeout(() => {
         window.location.href = "/";
-      }, 1000);
+      }, 3000);
     } else {
       window.$snackbar(`Oops! Something went wrong.`, "error");
     }
