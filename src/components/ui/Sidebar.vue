@@ -95,7 +95,7 @@ onMounted(async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    customerName.value = `${response.data.first_name} ${response.data.last_name}`;
+    customerName.value = `${response.data.first_name}`;
     userAvatar.value = response.data.profile_picture;
   } catch (error) {
     console.error(`Error fetching customer name:`, error);
