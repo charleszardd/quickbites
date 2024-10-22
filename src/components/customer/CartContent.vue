@@ -59,6 +59,8 @@
         <v-row class="custom-radius product-card py-5">
           <v-card class="image-holder ml-3">
             <v-img
+              height="100"
+              width="100"
               :src="product.image"
               alt="Product Image"
               class="product-image"
@@ -98,9 +100,9 @@
         height="300px"
       />
       <span class="empty-title my-2">Your cart is empty.</span>
-      <v-btn variant="text"
+      <v-btn variant="text" color="primary"
         ><router-link color="primary" class="back-menu-link" to="/"
-          >Go back to menu to order</router-link
+          >Go back to menu</router-link
         ></v-btn
       >
     </v-row>
@@ -147,6 +149,23 @@ onMounted(() => {
   cartProducts.value = cart.products.value;
 });
 
+const saveCart = async () => {
+    for (const product of cartProducts.value){
+        const totalPrice =  product.price  * product.quantity;
+        try{
+            await axios.post('/api/cart-items', {
+                cart_id: 'unique_cart_identifier',
+                product_id: product.id,
+                quantity: product.quantity,
+                price: totalPrice,
+            });
+            
+            } catch (err){
+                console.error('Error saving cart:', err);
+            }
+        }
+    };
+
 const orderMore = () => {
   router.push("/");
 };
@@ -181,8 +200,8 @@ const totalAmount = computed(() => {
   height: 50px;
 }
 .product-image {
-  width: 100%;
   height: auto;
+  object-fit: cover;
 }
 .dropdown-menu {
   min-width: 50px !important;

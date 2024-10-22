@@ -14,7 +14,6 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const isCartPage = computed(() => {
-    console.log('Current route path:', route.path); 
     return route.path.toLowerCase() === '/cart';
 });
 

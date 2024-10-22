@@ -23,7 +23,6 @@ const addProduct = (product) => {
   saveCartToLocalStorage(); 
 };
 
-// New function to increment the product quantity
 const incrementQuantity = (productId) => {
   const product = products.value.find((p) => p.id === productId);
   if (product) {
@@ -33,7 +32,6 @@ const incrementQuantity = (productId) => {
   }
 };
 
-// New function to decrement the product quantity
 const decrementQuantity = (productId) => {
   const product = products.value.find((p) => p.id === productId);
   if (product && product.quantity > 1) {
@@ -41,7 +39,7 @@ const decrementQuantity = (productId) => {
     count.value--;
     saveCartToLocalStorage();
   } else if (product && product.quantity === 1) {
-    removeProduct(productId); // Remove the product if quantity goes to 0
+    removeProduct(productId); 
   }
 };
 

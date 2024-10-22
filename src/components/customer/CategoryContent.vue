@@ -61,7 +61,8 @@
 <script setup>
 import { ref, watch, onMounted, computed } from "vue";
 import axios from "axios";
-import { cart } from "@/stores/cart";
+import { cart } from "@/stores/cart"; 
+import { getAuth } from '@/pages/auth/authServiceProvider/authService';
 
 const props = defineProps({
   categoryId: Number,
@@ -73,6 +74,7 @@ const props = defineProps({
 
 const products = ref([]);
 const loading = ref(false);
+const productQuantities = ref({});
 
 const categoryName = computed(() => {
   if (!props.categories) return "Unknown Category";
@@ -116,8 +118,33 @@ const hasProducts = computed(() => {
   return products.value.length > 0;
 });
 
-const addToCart = (product) => {
-  cart.addProduct(product);
+const addToCart = async (product) => {
+  const productId = product.id;
+  
+  if (!productQuantities.value[productId]) {
+    productQuantities.value[productId] = 1;
+  } else {
+    productQuantities.value[productId]++;
+  }
+
+  const quantity = productQuantities.value[productId];
+  const { customer } = getAuth();
+  const customerId = customer ? customer.id : null; 
+
+  if (!customerId) {
+    console.error("Customer is not logged in.");
+    return; 
+  }
+
+  try {
+
+    cart.addProduct(product);
+    await axios.post(`/api/cart/${customerId}`, {
+      items: [{ product_id: productId, quantity: quantity }]
+    });
+  } catch (error) {
+    console.error("Failed to add product to cart:", error);
+  }
 };
 </script>
 <style scoped>
