@@ -1,6 +1,9 @@
 <template>
     <div>
-        <AddAdmin />
+        <v-col class="d-flex justify-end">
+            <AddAdmin />
+        </v-col>
+
         <v-card class="custom-radius">
             <v-table>
                 <thead>

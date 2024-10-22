@@ -45,8 +45,8 @@
                             variant="outlined" />
                     </v-card-text>
                     <v-card-actions class="d-flex justify-end">
-                        <v-btn text @click="addCreditsDialog = false">Cancel</v-btn>
-                        <v-btn color="primary" @click="addCredits">Add</v-btn>
+                        <v-btn text @click="addCreditsDialog = false" height="50">Cancel</v-btn>
+                        <v-btn class="bg-primary" @click="addCredits" height="50">Add</v-btn>
                     </v-card-actions>
                 </Modal>
             </div>
@@ -73,7 +73,7 @@ const props = defineProps({
 const emit = defineEmits(['update:visible']);
 const localVisible = ref(props.visible);
 const addCreditsDialog = ref(false);
-const creditAmount = ref(0);
+const creditAmount = ref();
 
 watch(() => props.visible, (newValue) => {
     localVisible.value = newValue;
