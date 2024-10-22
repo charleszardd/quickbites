@@ -7,11 +7,12 @@
           <v-icon>mdi-menu</v-icon>
         </v-btn>
 
-        <h2 class="text-logo font-weight-black d-flex">
+        <!-- <h2 class="text-logo font-weight-black d-flex">
           <div class="text-primary">Quick</div>
           <div class="text-secondary">Bites</div>
-        </h2>
+        </h2> -->
 
+        <img src="../../../public/quickbites-logo.png" height="40" />
         <v-spacer />
 
         <CartNotifier v-if="isUserAuthenticated" />
