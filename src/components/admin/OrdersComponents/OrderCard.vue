@@ -66,8 +66,15 @@
             </div>
 
             <div class="d-flex flex-wrap mt-3 align-center justify-space-between">
-                <span>{{ new Date(order.created_at).toLocaleDateString() }}</span>
-                <span>{{ new Date(order.created_at).toLocaleTimeString() }}</span>
+                <span>Placed at</span>
+                <span>{{ new Date(order.created_at).toLocaleDateString() }} -
+                    {{ new Date(order.created_at).toLocaleTimeString() }}</span>
+            </div>
+
+            <div class="d-flex flex-wrap mt-3 align-center justify-space-between">
+                <span>Pick-up option</span>
+                <span v-if="order.cart.schedule === 'Standard'">{{ order.cart.schedule }}</span>
+                <span v-else><small>Schedule:</small> {{ order.cart.schedule }}</span>
             </div>
 
             <v-divider class="my-3" />
