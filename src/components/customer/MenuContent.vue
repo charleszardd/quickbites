@@ -23,6 +23,7 @@
 
     </v-container>
     <CategoryContent :categoryId="activeCategory" v-if="activeCategory" :categories="categories" />
+    <AllProducts v-else />
   </div>
 </template>
 
