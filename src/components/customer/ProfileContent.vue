@@ -49,8 +49,8 @@
 
                   <v-card class="custom-radius" color="primary-darken-1">
                      <div class="d-flex flex-column align-end">
-                        <v-btn @click="hideBalance" icon="mdi-eye" height="30px" width="50px" variant="text" flat
-                           :style="{ fontSize: '0.8rem', opacity: '0.8' }" />
+                        <v-btn @click="hideBalance" :icon="isBalanceHidden ? 'mdi-eye' : 'mdi-eye-off'" height="30px"
+                           width="50px" variant="text" flat :style="{ fontSize: '0.8rem', opacity: '0.8' }" />
                      </div>
                      <div class="text-center">
                         <v-card-title class="font-weight-bold">
