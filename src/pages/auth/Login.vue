@@ -7,7 +7,7 @@
         <v-text-field v-model="form.email" type="email" label="Enter your email address" variant="outlined"
           class="custom-radius"></v-text-field>
 
-        <v-text-field v-model="form.password" type="password" class="custom-radius" label="Enter your email address"
+        <v-text-field v-model="form.password" type="password" class="custom-radius" label="Enter your password"
           variant="outlined"></v-text-field>
 
         <v-btn type="submit" @click="login" :loading="loading" height="53" class="button-text w-100 mt-2">Sign
