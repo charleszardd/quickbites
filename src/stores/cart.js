@@ -23,7 +23,6 @@ const addProduct = (product) => {
   saveCartToLocalStorage(); 
 };
 
-// New function to increment the product quantity
 const incrementQuantity = (productId) => {
   const product = products.value.find((p) => p.id === productId);
   if (product) {
@@ -33,24 +32,29 @@ const incrementQuantity = (productId) => {
   }
 };
 
-// New function to decrement the product quantity
 const decrementQuantity = (productId) => {
-  const product = products.value.find((p) => p.id === productId);
-  if (product && product.quantity > 1) {
-    product.quantity--;
-    count.value--;
-    saveCartToLocalStorage();
-  } else if (product && product.quantity === 1) {
-    removeProduct(productId); // Remove the product if quantity goes to 0
+  const product = products.value.find(p => p.id === productId);
+  if (product) {
+    if (product.quantity > 1) {
+      product.quantity--;
+      count.value--;
+      saveCartToLocalStorage(); 
+    } else if (product.quantity === 1) {
+   
+      removeProduct(productId); 
+    }
   }
 };
 
 const removeProduct = (productId) => {
-  const productIndex = products.value.findIndex((p) => p.id === productId);
+  const productIndex = products.value.findIndex(p => p.id === productId);
   if (productIndex !== -1) {
-    count.value -= products.value[productIndex].quantity;
-    products.value.splice(productIndex, 1);
-    saveCartToLocalStorage(); 
+
+    const removedProduct = products.value[productIndex];
+    count.value -= removedProduct.quantity; 
+    products.value.splice(productIndex, 1); 
+
+    saveCartToLocalStorage();
   }
 };
 
