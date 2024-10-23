@@ -37,7 +37,7 @@
             </div>
 
             <div class="d-flex flex-wrap align-center justify-space-between">
-                <span>Order {{ order.id }} / {{ order.cart.payment_method ? order.cart.payment_method.name :
+                <span>Order {{ order.order_number }} / {{ order.cart.payment_method ? order.cart.payment_method.name :
                     'Not Specified'
                     }},
                     Paid</span>
@@ -143,12 +143,8 @@
 
                 <v-row v-if="order.order_status.name === 'Complete'" class="action-buttons mt-auto">
                     <v-btn @click="showCancelDialog" class="custom-radius" color="primary" variant="tonal" height="50px"
-                        width="25%" flat>
+                        width="100%" flat>
                         Cancel
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn class="custom-radius" color="primary" height="50px" width="70%" flat>
-                        View Details
                     </v-btn>
                 </v-row>
 
