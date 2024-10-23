@@ -13,7 +13,7 @@ const myCustomLightTheme = {
     'surface-variant': '#424242',
     'on-surface-variant': '#EEEEEE',
     primary: '#FC8019',
-    'primary-darken-1': '#1F5592',
+    'primary-darken-1': '#171826',
     secondary: '#09AA29',
     'secondary-darken-1': '#018786',
     error: '#B00020',

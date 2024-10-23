@@ -1,5 +1,5 @@
 <template>
-<ProfileContent />
+    <ProfileContent />
 </template>
 
 <script setup>

@@ -3,14 +3,15 @@
     <v-navigation-drawer :model-value="isDrawerOpen" app temporary @update:model-value="updateDrawer">
       <v-row align="center" class="mx-auto px-3 py-2">
         <v-avatar size="40" class="bg-grey custom-radius">
-          <v-img :src="userAvatar" alt="User Avatar" v-if="userAvatar" />
+          <v-img :src="customer.profile_picture_url" alt="User Avatar" v-if="userAvatar" />
           <v-icon v-else>mdi-account</v-icon>
         </v-avatar>
         <v-col class="ml-3">
-          <div class="text-h6">{{ customerName || 'P. Diddy' }}</div>
+          <div class="text-h6">{{ customer.first_name || 'P. Diddy' }}</div>
           <div class="profile-text ml-0 mt-1 text-body-2" color="primary">
-            <router-link to="/profile"></router-link>
-            Manage Profile
+            <router-link to="/profile">
+              Manage Profile
+            </router-link>
           </div>
         </v-col>
       </v-row>
@@ -79,8 +80,7 @@ const isActive = (path) => {
 };
 
 const isUserAuthenticated = ref(!!localStorage.getItem("token"));
-const customerName = ref('');
-const userAvatar = ref('');
+const customer = ref([]);
 
 const handleLogout = async () => {
   logout();
@@ -95,8 +95,7 @@ onMounted(async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    customerName.value = `${response.data.first_name}`;
-    userAvatar.value = response.data.profile_picture;
+    customer.value = response.data[0];
   } catch (error) {
     console.error(`Error fetching customer name:`, error);
   }
