@@ -19,8 +19,8 @@
                                 style="font-size: 54px; height: 100%; width: 100%;">
                                 mdi-food
                             </v-icon>
-                            <v-img v-else :src="product.image" class="custom-radius" alt="Product Image" width="100%"
-                                height="100%" cover />
+                            <v-img v-else :src="product.image_url" class="custom-radius" alt="Product Image"
+                                width="100%" height="100%" cover />
                         </v-card>
                     </td>
 
