@@ -10,17 +10,21 @@
 
     <v-row v-else-if="hasProducts">
       <v-col v-for="product in products" :key="product.id" cols="12" sm="6" md="4">
-        <v-card class="custom-radius product-card py-2" height="90" :class="{ disabled: product.status_id === 2 }">
+        <v-card
+          class="custom-radius product-card py-2"
+          height="90"
+          :class="{ disabled: product.status_id === 2 }"
+        >
           <v-card class="custom-radius product-image-holder">
             <v-img :src="product.image" alt="Product Image" class="product-image" height="100%" width="100%" cover />
           </v-card>
           <v-col class="pa-0">
-            <v-card-title class="text-subtitle-1 py-0">{{
-              product.name
-            }}</v-card-title>
-            <v-card-subtitle class="text-subtitle-2 py-0">{{
-              "₱" + product.price.toFixed(2)
-            }}</v-card-subtitle>
+            <v-card-title class="text-subtitle-1 py-0">
+              {{ product.name }}
+            </v-card-title>
+            <v-card-subtitle class="text-subtitle-2 py-0">
+              {{ "₱" + product.price.toFixed(2) }}
+            </v-card-subtitle>
             <v-card-subtitle class="text-subtitle-2 py-0">
               <small>{{ statusMapping[product.status_id] }}</small>
             </v-card-subtitle>
@@ -39,10 +43,12 @@
     </v-row>
   </v-col>
 </template>
+
 <script setup>
 import { ref, watch, onMounted, computed } from "vue";
 import axios from "axios";
-import { cart } from "@/stores/cart";
+import { cart } from "@/stores/cart"; 
+import { getAuth } from '@/pages/auth/authServiceProvider/authService'; 
 
 const props = defineProps({
   categoryId: Number,
@@ -54,6 +60,7 @@ const props = defineProps({
 
 const products = ref([]);
 const loading = ref(false);
+const productQuantities = ref({});
 
 const categoryName = computed(() => {
   if (!props.categories) return "Unknown Category";
@@ -97,10 +104,37 @@ const hasProducts = computed(() => {
   return products.value.length > 0;
 });
 
-const addToCart = (product) => {
-  cart.addProduct(product);
+const addToCart = async (product) => {
+    const productId = product.id;
+
+    const quantity = 1;
+
+    const { customer } = getAuth();
+    const customerId = customer ? customer.id : null;
+
+    if (!customerId) {
+        console.error("Customer is not logged in.");
+        return;
+    }
+
+    try {
+     
+        const items = [{
+            product_id: productId,
+            quantity: quantity
+        }];
+
+        await axios.post(`/api/cart/${customerId}`, { items });
+        cart.addProduct(product); 
+
+        console.log(`Added product ID: ${productId}, Quantity: ${quantity}`);
+    } catch (error) {
+        console.error("Failed to add product to cart:", error);
+    }
 };
+
 </script>
+
 <style scoped>
 .product-card {
   transition: 0.3s ease;
