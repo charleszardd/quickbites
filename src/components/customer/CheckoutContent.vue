@@ -169,23 +169,34 @@ const confirmOrder = async () => {
   try {
     const paymentId = selectedPaymentMethod.value; 
     const schedule = selectedPickupOption.value === 0 ? 'Standard' : selectedTime.value; 
-
     const { customer } = getAuth();
-
-  
-    console.log("Authenticated Customer:", customer);
-
     const customerId = customer ? customer.id : null;
-
-  
-    console.log("Customer ID:", customerId);
 
     if (!customerId) {
       console.error("Customer is not logged in.");
       return;
     }
 
-    
+    if (paymentId === 1) { // Wallet payment
+      const customerBalance = customer.balance;
+      const totalAmount = parseFloat(totalPrice.value);
+
+      if (customerBalance < totalAmount) {
+        window.$snackbar(`Insufficient balance!`, 'error');
+        return;
+      }
+
+  
+      await axios.put(`/api/customer/${customerId}/balance`, { deduction: totalAmount });
+    } else if (paymentId === 2) { // Cash payment
+  
+    } else {
+
+      window.$snackbar(`Invalid payment method selected.`, 'error');
+      return;
+    }
+
+ 
     await axios.post(`/api/cart/${customerId}`, { 
       total: totalPrice.value,
       schedule: schedule,
@@ -193,15 +204,14 @@ const confirmOrder = async () => {
     });
 
     isConfirmationModalVisible.value = true;
-     cart.clearCart();
+    cart.clearCart();
   } catch (error) {
     console.error(`Order failed:`, error);
-    window.$snackbar(`Insufficient Balance!`); 
+    window.$snackbar(`Order failed! Please try again.`, 'error'); 
   } finally {
     loading.value = false; 
   }
 };
-
 
 const closeConfirmationModal = () => {
   isConfirmationModalVisible.value = false;
