@@ -7,7 +7,7 @@
                     <v-row>
                         <v-card class="custom-radius d-flex align-center justify-center bg-primary" height="100px"
                             width="100px">
-                            <v-img v-if="customer && customer.profile_picture !== null" :src="customer.profile_picture"
+                            <v-img v-if="customer.profile_picture_url" :src="customer.profile_picture_url"
                                 class="w-100 h-100" cover />
                             <h1 v-else class="name-initial">{{ customer?.first_name[0] }}{{ customer?.last_name[0] }}
                             </h1>
