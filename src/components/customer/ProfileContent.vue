@@ -14,8 +14,7 @@
                      variant="outlined">Edit</v-btn>
 
                   <div v-else>
-                     <v-btn @click="cancelEdit" prepend-icon="mdi-square-edit-outline" color="red"
-                        variant="text">Cancel</v-btn>
+                     <v-btn @click="cancelEdit" prepend-icon="mdi-close" color="red" variant="text">Cancel</v-btn>
                      <v-btn @click="saveEdit" prepend-icon="mdi-square-edit-outline" color="success">Save</v-btn>
                   </div>
                </v-col>
