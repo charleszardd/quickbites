@@ -75,10 +75,25 @@ const rules = {
 const confirmPasswordRule = (value) =>
   value === form.value.password || "Passwords must match.";
 
+const login = async () => {
+  try {
+    const response = await axios.post("/api/login", {
+      email: form.value.email,
+      password: form.value.password,
+    });
+    window.localStorage.setItem('token', response.data.token);
+    setTimeout(() => {
+      window.location.href = `/UploadProfile`;
+    }, 1500);
+  } catch (error) {
+    window.$snackbar(`Login failed!`, `error`);
+  }
+};
+
 const register = async () => {
   loading.value = true;
   try {
-    const response = await axios.post(
+    await axios.post(
       "/api/register",
       {
         first_name: form.value.firstName,
@@ -95,9 +110,7 @@ const register = async () => {
       }
     );
     window.$snackbar(`Registration completed successfully!`, `success`);
-    setTimeout(() => {
-      window.location.href = `/auth/login`;
-    }, 3000);
+    await login();
   } catch (error) {
     window.$snackbar(`Please fill in all required fields!`, `error`);
   } finally {
