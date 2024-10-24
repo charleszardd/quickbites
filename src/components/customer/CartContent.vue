@@ -225,6 +225,7 @@ const incrementQuantity = async (productId) => {
   const product = cartProducts.value.find((p) => p.id === productId);
   product.quantity++;
   await updateCart(productId, product.quantity);
+
 };
 
 const decrementQuantity = async (productId) => {
@@ -234,6 +235,7 @@ const decrementQuantity = async (productId) => {
     if (product.quantity > 1) {
       product.quantity--;
       await updateCart(productId, product.quantity);
+   
     } else {
       await removeFromCart(productId);
     }
@@ -255,7 +257,7 @@ const removeFromCart = async (productId) => {
       (product) => product.id !== productId
     );
     cart.removeProduct(productId);
-    console.log(`Removed product ID: ${productId} from cart ID: ${cartId}`);
+    
   } catch (error) {
     console.error("Failed to remove product from cart:", error);
   }

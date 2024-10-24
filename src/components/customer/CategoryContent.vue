@@ -124,7 +124,6 @@ const addToCart = async (product) => {
     await axios.post(`/api/cart/${customerId}`, { items });
     cart.addProduct(product);
 
-    console.log(`Added product ID: ${productId}, Quantity: ${quantity}`);
   } catch (error) {
     console.error("Failed to add product to cart:", error);
   }
