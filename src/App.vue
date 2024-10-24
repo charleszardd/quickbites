@@ -6,6 +6,8 @@
       </component>
     </v-main>
     <SnackbarMessage />
+
+    <Receiver />
   </v-app>
 </template>
 
