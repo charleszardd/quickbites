@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div>
+            <v-text-field v-model="searchQuery" label="Search customer" prepend-inner-icon="mdi-magnify" clearable
+                @input="onInputChange" max-width="300px" variant="outlined"></v-text-field>
+        </div>
         <v-card class="custom-radius">
             <v-table>
                 <thead>
@@ -49,6 +53,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useCustomerStore } from '@/stores/Admin/CustomerPinia';
+import axios from 'axios';
 
 const customerStore = useCustomerStore();
 
@@ -57,6 +62,30 @@ const detailModalVisible = ref(false);
 const selectedCustomer = ref(null);
 const customerToDelete = ref(null);
 const detailModalKey = ref(0);
+const searchQuery = ref('');
+let debounceTimeout = null;
+
+const onInputChange = () => {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+        searchCustomers();
+    }, 300);
+};
+
+const searchCustomers = async () => {
+    if (searchQuery.value) {
+        try {
+            const response = await axios.get(`/api/customers`, {
+                params: { search: searchQuery.value }
+            });
+            customerStore.customers = response.data;
+        } catch (error) {
+            console.error('Error fetching customers:', error);
+        }
+    } else {
+        customerStore.fetchCustomers();
+    }
+};
 
 const openDeleteModal = (customer) => {
     customerToDelete.value = customer;

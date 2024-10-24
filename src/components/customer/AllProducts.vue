@@ -7,8 +7,8 @@
                 <v-card class="custom-radius product-card py-2" height="90"
                     :class="{ disabled: product.status_id === 2 }">
                     <v-card class="custom-radius product-image-holder">
-                        <v-img :src="product.image" alt="Product Image" class="product-image" height="100%" width="100%"
-                            cover />
+                        <v-img :src="product.image_url" alt="Product Image" class="product-image" height="100%"
+                            width="100%" cover />
                     </v-card>
 
                     <v-col class="pa-0">
@@ -40,7 +40,6 @@ import { ref, onMounted, computed, onUnmounted } from "vue";
 import axios from "axios";
 import { cart } from "@/stores/cart";
 
-// Data binding
 const products = ref([]);
 const loading = ref(false);
 const page = ref(1);
@@ -92,7 +91,6 @@ const hasProducts = computed(() => {
     return products.value.length > 0;
 });
 
-// Add a product to the cart
 const addToCart = (product) => {
     cart.addProduct(product);
 };
