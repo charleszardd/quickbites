@@ -110,7 +110,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router"; 
 import { cart } from "@/stores/cart";
 import axios from "axios";
@@ -121,6 +121,7 @@ const route = useRoute();
 const totalPrice = ref(route.query.total);
 const selectedTime = ref("");
 const loading = ref(false);
+const customerData = ref(null); 
 
 const pickupOptions = [
   { title: "Standard", subtitle: "5-10 minutes", icon: "mdi-clock-fast" },
@@ -137,29 +138,45 @@ const selectedPaymentMethod = ref(null);
 const isScheduleModalVisible = ref(false);
 const isConfirmationModalVisible = ref(false);
 
+onMounted(async () => {
+  const { customer } = getAuth();
+  const customerId = customer ? customer.id : null; 
+
+  if (customerId) {
+    try {
+      const response = await axios.get(`/api/customers/${customerId}`); 
+      customerData.value = response.data; 
+   
+    } catch (error) {
+      console.error("Failed to fetch customer data:", error);
+      window.$snackbar(`Failed to fetch customer data. Please try again.`, 'error');
+    }
+  } else {
+    console.error("Customer is not logged in.");
+  }
+});
+
+
 const selectPickupOption = (index) => {
   selectedPickupOption.value = index;
 
   if (index === 0) {
-    console.log("Selected option: Standard");
   } else if (index === 1) {
     isScheduleModalVisible.value = true; 
   }
 };
 
 const selectPaymentMethod = (index) => {
- 
   selectedPaymentMethod.value = index; 
-
   let paymentId;
+
   if (index === 0) {
     paymentId = 1; // Wallet
-    console.log("Selected payment method: Wallet, ID:", paymentId);
+
   } else if (index === 1) {
     paymentId = 2; // Cash
-    console.log("Selected payment method: Cash, ID:", paymentId);
+   
   }
-
 
   selectedPaymentMethod.value = paymentId; 
 };
@@ -169,42 +186,44 @@ const confirmOrder = async () => {
   try {
     const paymentId = selectedPaymentMethod.value; 
     const schedule = selectedPickupOption.value === 0 ? 'Standard' : selectedTime.value; 
-    const { customer } = getAuth();
-    const customerId = customer ? customer.id : null;
 
-    if (!customerId) {
-      console.error("Customer is not logged in.");
+    if (!customerData.value) {
+      console.error("Customer data not available.");
       return;
     }
 
-    if (paymentId === 1) { // Wallet payment
-      const customerBalance = customer.balance;
-      const totalAmount = parseFloat(totalPrice.value);
+    const customerBalance = parseFloat(customerData.value.balance);
+    const totalAmount = parseFloat(totalPrice.value);
+    
 
+    if (paymentId === 1) { // Wallet payment
       if (customerBalance < totalAmount) {
         window.$snackbar(`Insufficient balance!`, 'error');
-        return;
+        return; 
       }
 
-  
-      await axios.put(`/api/customer/${customerId}/balance`, { deduction: totalAmount });
+      await axios.post(`/api/cart/${customerData.value.id}`, { 
+        total: totalPrice.value,  
+        schedule: schedule,       
+        payment_id: paymentId     
+      });
+      
     } else if (paymentId === 2) { // Cash payment
-  
-    } else {
 
+      await axios.post(`/api/cart/${customerData.value.id}`, { 
+        total: totalPrice.value,  
+        schedule: schedule,       
+        payment_id: paymentId     
+      });
+
+    } else {
       window.$snackbar(`Invalid payment method selected.`, 'error');
       return;
     }
 
- 
-    await axios.post(`/api/cart/${customerId}`, { 
-      total: totalPrice.value,
-      schedule: schedule,
-      payment_id: paymentId, 
-    });
-
     isConfirmationModalVisible.value = true;
     cart.clearCart();
+    totalPrice.value = 0;
   } catch (error) {
     console.error(`Order failed:`, error);
     window.$snackbar(`Order failed! Please try again.`, 'error'); 
@@ -215,10 +234,10 @@ const confirmOrder = async () => {
 
 const closeConfirmationModal = () => {
   isConfirmationModalVisible.value = false;
+  totalPrice.value = 0;
 };
 
 const confirmSchedule = () => {
-  console.log("Scheduled Time: ", selectedTime.value);
   isScheduleModalVisible.value = false; 
 };
 </script>
