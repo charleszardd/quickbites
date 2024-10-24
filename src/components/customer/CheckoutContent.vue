@@ -13,15 +13,9 @@
       <h1 class="text-h6 font-weight-bold mt-4 mb-3">Pick-up options</h1>
       <v-row>
         <v-col cols="12">
-          <v-card
-            v-for="(option, index) in pickupOptions"
-            :key="index"
-            @click="selectPickupOption(index)"
-            :class="{'selected-card': selectedPickupOption === index}"
-            variant="outlined"
-            height="80px"
-            class="custom-radius d-flex align-center px-4 py-3 mb-3"
-          >
+          <v-card v-for="(option, index) in pickupOptions" :key="index" @click="selectPickupOption(index)"
+            :class="{ 'selected-card': selectedPickupOption === index }" variant="outlined" height="80px"
+            class="custom-radius d-flex align-center px-4 py-3 mb-3">
             <v-icon class="mr-3">{{ option.icon }}</v-icon>
             <v-col>
               <v-card-title class="px-0 py-0">{{ option.title }}</v-card-title>
@@ -34,15 +28,9 @@
       <h1 class="text-h6 font-weight-bold mt-4 mb-3">Select Payment Method</h1>
       <v-row>
         <v-col cols="12">
-          <v-card
-            v-for="(payment, index) in paymentMethods"
-            :key="index"
-            @click="selectPaymentMethod(index)"
-            :class="{'selected-card': selectedPaymentMethod === index}" 
-            variant="outlined"
-            height="70px"
-            class="custom-radius d-flex align-center px-4 py-3 mb-3"
-          >
+          <v-card v-for="(payment, index) in paymentMethods" :key="index" @click="selectPaymentMethod(index)"
+            :class="{ 'selected-card': selectedPaymentMethod === index }" variant="outlined" height="70px"
+            class="custom-radius d-flex align-center px-4 py-3 mb-3">
             <v-icon class="mr-3">{{ payment.icon }}</v-icon>
             <v-col>
               <v-card-title class="px-0 py-0">{{ payment.title }}</v-card-title>
@@ -72,32 +60,15 @@
 
     <Terms />
 
-    <Modal
-      v-model="isScheduleModalVisible"
-      title="Schedule"
-      icon="mdi-calendar-clock"
-      height="300px"
-      width="350px"
-    >
-      <v-text-field
-        v-model="selectedTime"
-        variant="outlined"
-        label="Choose a time"
-        readonly
-        @click="showTimePickerModal = true"
-      ></v-text-field>
+    <Modal v-model="isScheduleModalVisible" title="Schedule" icon="mdi-calendar-clock" height="300px" width="350px">
+      <v-text-field v-model="selectedTime" variant="outlined" label="Choose a time" readonly
+        @click="showTimePickerModal = true"></v-text-field>
 
       <v-btn color="black" height="55px" class="w-100" @click="confirmSchedule">Confirm</v-btn>
     </Modal>
 
-    <Modal
-      v-model="isConfirmationModalVisible"
-      title="Order placed!"
-      icon="mdi-check-circle"
-      height="300px"
-      width="345px"
-      class="mx-auto d-flex flex-row justify-space-between"
-    >
+    <Modal v-model="isConfirmationModalVisible" title="Order placed!" icon="mdi-check-circle" height="300px"
+      width="345px" class="mx-auto d-flex flex-row justify-space-between">
       <div class="d-flex justify-space-between align-center">
         <span class="font-weight-bold">Your order has been successfully placed.</span>
       </div>
@@ -111,7 +82,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router"; 
+import { useRouter, useRoute } from "vue-router";
 import { cart } from "@/stores/cart";
 import axios from "axios";
 import { getAuth } from '@/pages/auth/authServiceProvider/authService';
@@ -121,7 +92,7 @@ const route = useRoute();
 const totalPrice = ref(route.query.total);
 const selectedTime = ref("");
 const loading = ref(false);
-const customerData = ref(null); 
+const customerData = ref(null);
 
 const pickupOptions = [
   { title: "Standard", subtitle: "5-10 minutes", icon: "mdi-clock-fast" },
@@ -140,13 +111,13 @@ const isConfirmationModalVisible = ref(false);
 
 onMounted(async () => {
   const { customer } = getAuth();
-  const customerId = customer ? customer.id : null; 
+  const customerId = customer ? customer.id : null;
 
   if (customerId) {
     try {
-      const response = await axios.get(`/api/customers/${customerId}`); 
-      customerData.value = response.data; 
-   
+      const response = await axios.get(`/api/customers/${customerId}`);
+      customerData.value = response.data;
+
     } catch (error) {
       console.error("Failed to fetch customer data:", error);
       window.$snackbar(`Failed to fetch customer data. Please try again.`, 'error');
@@ -162,12 +133,12 @@ const selectPickupOption = (index) => {
 
   if (index === 0) {
   } else if (index === 1) {
-    isScheduleModalVisible.value = true; 
+    isScheduleModalVisible.value = true;
   }
 };
 
 const selectPaymentMethod = (index) => {
-  selectedPaymentMethod.value = index; 
+  selectedPaymentMethod.value = index;
   let paymentId;
 
   if (index === 0) {
@@ -175,17 +146,17 @@ const selectPaymentMethod = (index) => {
 
   } else if (index === 1) {
     paymentId = 2; // Cash
-   
+
   }
 
-  selectedPaymentMethod.value = paymentId; 
+  selectedPaymentMethod.value = paymentId;
 };
 
 const confirmOrder = async () => {
-  loading.value = true; 
+  loading.value = true;
   try {
-    const paymentId = selectedPaymentMethod.value; 
-    const schedule = selectedPickupOption.value === 0 ? 'Standard' : selectedTime.value; 
+    const paymentId = selectedPaymentMethod.value;
+    const schedule = selectedPickupOption.value === 0 ? 'Standard' : selectedTime.value;
 
     if (!customerData.value) {
       console.error("Customer data not available.");
@@ -194,28 +165,32 @@ const confirmOrder = async () => {
 
     const customerBalance = parseFloat(customerData.value.balance);
     const totalAmount = parseFloat(totalPrice.value);
-    
 
-    if (paymentId === 1) { // Wallet payment
+    const items = cart.products.value.map(product => ({
+      product_id: product.id,
+      quantity: product.quantity
+    }));
+
+    if (paymentId === 1) {
       if (customerBalance < totalAmount) {
         window.$snackbar(`Insufficient balance!`, 'error');
-        return; 
+        return;
       }
 
-      await axios.post(`/api/cart/${customerData.value.id}`, { 
-        total: totalPrice.value,  
-        schedule: schedule,       
-        payment_id: paymentId     
-      });
-      
-    } else if (paymentId === 2) { // Cash payment
-
-      await axios.post(`/api/cart/${customerData.value.id}`, { 
-        total: totalPrice.value,  
-        schedule: schedule,       
-        payment_id: paymentId     
+      await axios.post(`/api/cart/${customerData.value.id}`, {
+        total: totalPrice.value,
+        schedule: schedule,
+        payment_id: paymentId,
+        items: items
       });
 
+    } else if (paymentId === 2) {
+      await axios.post(`/api/cart/${customerData.value.id}`, {
+        total: totalPrice.value,
+        schedule: schedule,
+        payment_id: paymentId,
+        items: items
+      });
     } else {
       window.$snackbar(`Invalid payment method selected.`, 'error');
       return;
@@ -226,9 +201,9 @@ const confirmOrder = async () => {
     totalPrice.value = 0;
   } catch (error) {
     console.error(`Order failed:`, error);
-    window.$snackbar(`Order failed! Please try again.`, 'error'); 
+    window.$snackbar(`Order failed! Please try again.`, 'error');
   } finally {
-    loading.value = false; 
+    loading.value = false;
   }
 };
 
@@ -238,13 +213,13 @@ const closeConfirmationModal = () => {
 };
 
 const confirmSchedule = () => {
-  isScheduleModalVisible.value = false; 
+  isScheduleModalVisible.value = false;
 };
 </script>
 
 <style scoped>
 .selected-card {
-  border: 2px solid green; 
+  border: 2px solid green;
 }
 
 .header-holder {
