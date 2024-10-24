@@ -8,14 +8,16 @@
       <div v-if="customer">
          <v-tabs-window v-model="tab">
             <v-tabs-window-item value="information">
+               <v-col>
+                  <h2>Account Info</h2>
+               </v-col>
 
                <v-col class="d-flex justify-end">
                   <v-btn v-if="!editMode" @click="toggleEditMode" prepend-icon="mdi-square-edit-outline" color="grey"
                      variant="outlined">Edit</v-btn>
 
                   <div v-else>
-                     <v-btn @click="cancelEdit" prepend-icon="mdi-square-edit-outline" color="red"
-                        variant="text">Cancel</v-btn>
+                     <v-btn @click="cancelEdit" prepend-icon="mdi-close" color="red" variant="text">Cancel</v-btn>
                      <v-btn @click="saveEdit" prepend-icon="mdi-square-edit-outline" color="success">Save</v-btn>
                   </div>
                </v-col>
@@ -63,9 +65,7 @@
             </v-tabs-window-item>
 
             <v-tabs-window-item value="security">
-               <v-col>
-                  security tab
-               </v-col>
+               <SecurityTab :customer="customer" />
             </v-tabs-window-item>
          </v-tabs-window>
       </div>

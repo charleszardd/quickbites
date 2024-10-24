@@ -68,10 +68,10 @@ async function uploadImage() {
                 Authorization: `Bearer ${token}`,
             },
         });
-
+        window.$snackbar(`Profile Picture changed successfully!.`, "success");
         customer.value.profile_picture_url = response.data.profile_picture_url;
         previewImage.value = null;
-        router.push('/');
+        setTimeout(() => { router.push('/'); }, 1000);
     } catch (error) {
         console.error('Error uploading image:', error);
     }
