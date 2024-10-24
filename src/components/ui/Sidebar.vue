@@ -3,7 +3,7 @@
     <v-navigation-drawer :model-value="isDrawerOpen" app temporary @update:model-value="updateDrawer">
       <v-row align="center" class="mx-auto px-3 py-2">
         <v-avatar size="40" class="bg-grey custom-radius">
-          <v-img :src="customer.profile_picture_url" alt="User Avatar" v-if="userAvatar" />
+          <v-img :src="customer.profile_picture_url" alt="User Avatar" v-if="customer.profile_picture_url" />
           <v-icon v-else>mdi-account</v-icon>
         </v-avatar>
         <v-col class="ml-3">
