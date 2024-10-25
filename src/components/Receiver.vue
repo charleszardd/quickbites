@@ -16,26 +16,39 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import eventBus from '@/utils/EventBus.js'; // Adjust the path as necessary
+import { onMounted, ref } from 'vue';
 
 const dialog = ref(false);
 const receivedMessage = ref('');
 
-// Function to open the modal
+onMounted(() => {
+    if ('Notification' in window) {
+        Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+                console.log('Notification permission granted.');
+            }
+        });
+    }
+
+    // Listen for the message event
+    window.Echo.channel('chat').listen('MessageSent', (event) => {
+        open(event.message);
+
+        // Show a notification if permission is granted
+        if (Notification.permission === 'granted') {
+            new Notification('New Message', {
+                body: event.message,
+            });
+        }
+    });
+});
+
 const open = (message) => {
-    console.log("Received message:", message); // Debugging line
     receivedMessage.value = message;
     dialog.value = true;
 };
 
-// Function to close the modal
 const close = () => {
     dialog.value = false;
 };
-
-// Listen for the message event
-onMounted(() => {
-    eventBus.on('messageSent', open);
-});
 </script>

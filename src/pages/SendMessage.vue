@@ -15,14 +15,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import eventBus from '@/utils/EventBus.js'; // Adjust path if necessary
 
 const message = ref('');
 const messages = ref([]);
 
 onMounted(() => {
     window.Echo.channel('chat').listen('MessageSent', (event) => {
-        messages.value.push(event.message);
+        messages.value.push(event.message); // Add received message to the list
     });
 });
 
@@ -38,11 +37,9 @@ const sendMessage = () => {
         }
     }).then(() => {
         messages.value.push(message.value); // Add the sent message to the list
-        eventBus.emit('messageSent', message.value); // Emit the message to the event bus
         message.value = ''; // Clear the input after sending
     }).catch(error => {
         console.error("Error sending message:", error);
     });
 };
-
 </script>

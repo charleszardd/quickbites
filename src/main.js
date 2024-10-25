@@ -3,14 +3,12 @@ import App from './App.vue';
 import router from '@/router';
 import { createApp } from 'vue';
 import axios from 'axios';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 axios.defaults.baseURL = API_URL;
-
-
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 window.Echo = new Echo({
@@ -20,9 +18,8 @@ window.Echo = new Echo({
     encrypted: true,
 });
 
+const app = createApp(App);
 
-const app = createApp(App)
-
-registerPlugins(app)
-app.use(router)
-app.mount('#app')
+registerPlugins(app);
+app.use(router);
+app.mount('#app');
