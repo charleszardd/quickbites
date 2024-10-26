@@ -1,15 +1,19 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600px">
-        <v-card>
-            <v-card-title>
-                <span class="headline">New Message Received</span>
+        <v-card class="custom-radius px-3 py-3">
+            <v-card-title class="d-flex justify-space-between align-center">
+                <div>
+                    <v-icon class="mr-3">{{ receivedIcon }}</v-icon>
+                    <span class="headline font-weight-bold">{{ receivedHeader }}</span>
+                </div>
+                <v-btn icon="mdi-close" variant="text" @click="close" />
             </v-card-title>
             <v-card-text>
                 <p>{{ receivedMessage }}</p>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="close">Close</v-btn>
+                <v-btn class="bg-primary w-100" height="50px" @click="close">Okay</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -17,11 +21,36 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import { getAuth } from "@/pages/auth/authServiceProvider/authService";
+import axios from 'axios';
 
+// Reactive variables for the dialog and message content
 const dialog = ref(false);
+const receivedIcon = ref('');
+const receivedHeader = ref('');
 const receivedMessage = ref('');
+const customerId = ref(null); // Reactive reference for customer ID
 
-onMounted(() => {
+// Fetch the customer ID on component mount
+onMounted(async () => {
+    const { token } = getAuth();
+    try {
+        const response = await axios.get('/api/get-customer-name', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        if (response.data.length > 0) {
+            customerId.value = response.data[0].id; // Assuming the response contains the customer ID
+            subscribeToMessages();
+        }
+    } catch (error) {
+        console.error(`Error fetching customer name:`, error);
+    }
+});
+
+// Function to initialize notification permission
+const requestNotificationPermission = () => {
     if ('Notification' in window) {
         Notification.requestPermission().then((permission) => {
             if (permission === 'granted') {
@@ -29,26 +58,39 @@ onMounted(() => {
             }
         });
     }
+};
 
-    // Listen for the message event
-    window.Echo.channel('chat').listen('MessageSent', (event) => {
-        open(event.message);
+// Function to handle the message event
+const handleMessageEvent = (event) => {
+    open(event.icon, event.header, event.message);
 
-        // Show a notification if permission is granted
-        if (Notification.permission === 'granted') {
-            new Notification('New Message', {
-                body: event.message,
-            });
-        }
-    });
-});
+    // Show a notification if permission is granted
+    if (Notification.permission === 'granted') {
+        new Notification('New Message', {
+            body: event.message,
+        });
+    }
+};
 
-const open = (message) => {
+// Function to open the dialog
+const open = (icon, header, message) => {
+    receivedIcon.value = icon;
+    receivedHeader.value = header;
     receivedMessage.value = message;
     dialog.value = true;
 };
 
+// Function to close the dialog
 const close = () => {
     dialog.value = false;
+};
+
+// Function to subscribe to the message channel
+const subscribeToMessages = () => {
+    requestNotificationPermission();
+
+    if (customerId.value) {
+        window.Echo.channel(`chat.${customerId.value}`).listen('MessageSent', handleMessageEvent);
+    }
 };
 </script>
