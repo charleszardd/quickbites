@@ -170,6 +170,7 @@ onMounted(async () => {
   cartProducts.value = cart.products.value;
 });
 
+// test new
 const getCartId = async () => {
   const { customer } = getAuth();
   if (!customer) {
@@ -180,6 +181,7 @@ const getCartId = async () => {
   try {
     const response = await axios.get(`/api/cart/${customer.id}`);
     const cartData = response.data;
+    console.log(cartData);
     return cartData.id;
   } catch (error) {
     console.error("Failed to retrieve cart:", error);
@@ -220,6 +222,7 @@ const clearAllProducts = async () => {
     console.error("Error clearing cart:", err);
   }
 };
+
 
 const incrementQuantity = async (productId) => {
   const product = cartProducts.value.find((p) => p.id === productId);
