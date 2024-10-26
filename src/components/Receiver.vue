@@ -24,14 +24,12 @@ import { onMounted, ref } from 'vue';
 import { getAuth } from "@/pages/auth/authServiceProvider/authService";
 import axios from 'axios';
 
-// Reactive variables for the dialog and message content
 const dialog = ref(false);
 const receivedIcon = ref('');
 const receivedHeader = ref('');
 const receivedMessage = ref('');
-const customerId = ref(null); // Reactive reference for customer ID
+const customerId = ref(null);
 
-// Fetch the customer ID on component mount
 onMounted(async () => {
     const { token } = getAuth();
     try {
@@ -41,7 +39,7 @@ onMounted(async () => {
             },
         });
         if (response.data.length > 0) {
-            customerId.value = response.data[0].id; // Assuming the response contains the customer ID
+            customerId.value = response.data[0].id;
             subscribeToMessages();
         }
     } catch (error) {
@@ -49,22 +47,16 @@ onMounted(async () => {
     }
 });
 
-// Function to initialize notification permission
 const requestNotificationPermission = () => {
     if ('Notification' in window) {
         Notification.requestPermission().then((permission) => {
-            if (permission === 'granted') {
-                console.log('Notification permission granted.');
-            }
         });
     }
 };
 
-// Function to handle the message event
 const handleMessageEvent = (event) => {
     open(event.icon, event.header, event.message);
 
-    // Show a notification if permission is granted
     if (Notification.permission === 'granted') {
         new Notification('New Message', {
             body: event.message,
@@ -72,7 +64,6 @@ const handleMessageEvent = (event) => {
     }
 };
 
-// Function to open the dialog
 const open = (icon, header, message) => {
     receivedIcon.value = icon;
     receivedHeader.value = header;
@@ -80,12 +71,10 @@ const open = (icon, header, message) => {
     dialog.value = true;
 };
 
-// Function to close the dialog
 const close = () => {
     dialog.value = false;
 };
 
-// Function to subscribe to the message channel
 const subscribeToMessages = () => {
     requestNotificationPermission();
 
