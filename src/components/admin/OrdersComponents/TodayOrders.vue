@@ -22,7 +22,9 @@ import axios from 'axios';
 const loading = ref(true);
 const error = ref(null);
 const orders = ref([]);
+let debounceTimer = null;
 
+// Function to fetch today's orders
 const fetchTodayOrders = async () => {
     loading.value = true;
     try {
@@ -36,7 +38,22 @@ const fetchTodayOrders = async () => {
     }
 };
 
-onMounted(fetchTodayOrders);
+// Debounced function for fetching orders
+const debouncedFetchTodayOrders = () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(fetchTodayOrders, 300); // Adjust debounce time as needed
+};
+
+// Fetch orders on component mount
+onMounted(() => {
+    fetchTodayOrders();
+    // Listen for new order events
+    window.Echo.channel('orders').listen('NewOrderCreated', (event) => {
+        orders.value.push(event.order);
+        debouncedFetchTodayOrders(); // Call the debounced fetch when a new order is created
+    });
+});
+
 defineExpose({ fetchTodayOrders });
 </script>
 
