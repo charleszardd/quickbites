@@ -1,6 +1,17 @@
 <template>
   <div class="py-0 mt-0 pt-0">
-    <v-row v-if="sortedOrders.length > 0" class="header-holder mt-1 mb-3">
+    <v-row v-if="loading" class="justify-center mt-5">
+      <v-progress-circular
+        indeterminate
+        color="primary"
+        size="50"
+      ></v-progress-circular>
+    </v-row>
+
+    <v-row
+      v-if="!loading && sortedOrders.length > 0"
+      class="header-holder mt-1 mb-3"
+    >
       <v-btn
         to="/"
         size="small"
@@ -13,16 +24,23 @@
       <h2 class="items">My Orders</h2>
     </v-row>
 
-    <v-col v-if="sortedOrders.length === 0" class="text-center mt-5">
+    <v-col
+      v-if="!loading && sortedOrders.length === 0"
+      class="text-center mt-5"
+    >
       <h2>No orders available</h2>
       <p>
-        It looks like you haven't placed any orders yet. Start ordering
-        now!
+        It looks like you haven't placed any orders yet. Start ordering now!
       </p>
       <v-btn to="/" class="mt-2" color="primary"> Go to Menu </v-btn>
     </v-col>
 
-    <v-col class="px-0" v-for="order in sortedOrders" :key="order.id">
+    <v-col
+      v-if="!loading"
+      class="px-0"
+      v-for="order in sortedOrders"
+      :key="order.id"
+    >
       <v-card
         class="custom-radius bg-in-progress"
         :to="`/orderdetails/${order.id}`"
@@ -82,11 +100,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import { getAuth } from "@/pages/auth/authServiceProvider/authService";
 
 const orders = ref([]);
+const loading = ref(true);
 
 onMounted(async () => {
   try {
@@ -98,6 +117,8 @@ onMounted(async () => {
     orders.value = response.data;
   } catch (error) {
     console.error("Error fetching orders:", error);
+  } finally {
+    loading.value = false;
   }
 });
 
