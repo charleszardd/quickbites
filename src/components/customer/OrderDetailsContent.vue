@@ -117,10 +117,6 @@ const getOrderDetails = async () => {
   }
 };
 
-onMounted(() => {
-  getOrderDetails();
-});
-
 const formatDate = (dateString) => {
   const options = {
     year: "numeric",
@@ -136,6 +132,23 @@ const formatDate = (dateString) => {
     .format(date)
     .replace(",", "");
 };
+
+let debounceTimer = null;
+
+const debouncedFetchOrderDetails = () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(getOrderDetails, 300);
+};
+
+
+onMounted(() => {
+  getOrderDetails();
+  window.Echo.channel('chat')
+    .listen('MessageSent', (event) => {
+      console.log('Order status updated:', event);
+      debouncedFetchOrderDetails();
+    });
+});
 </script>
 
 <style scoped>

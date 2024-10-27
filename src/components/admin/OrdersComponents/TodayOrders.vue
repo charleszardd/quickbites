@@ -22,7 +22,6 @@ import axios from 'axios';
 const loading = ref(true);
 const error = ref(null);
 const orders = ref([]);
-let debounceTimer = null;
 
 // Function to fetch today's orders
 const fetchTodayOrders = async () => {
@@ -42,17 +41,17 @@ const sortedOrders = computed(() => {
     return [...orders.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 });
 
-// Debounced function for fetching orders
+
+let debounceTimer = null;
+
 const debouncedFetchTodayOrders = () => {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(fetchTodayOrders, 300); // Adjust debounce time as needed
+    debounceTimer = setTimeout(fetchTodayOrders, 300);
 };
 
-// Fetch orders on component mount
 onMounted(() => {
     fetchTodayOrders();
     window.Echo.channel('orders').listen('NewOrderCreated', (event) => {
-        console.log('New order received:', event.order);
         debouncedFetchTodayOrders();
     });
 });
