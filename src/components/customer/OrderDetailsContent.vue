@@ -1,88 +1,81 @@
 <template>
   <div class="py-0 mt-0 pt-0">
     <v-row class="header-holder mt-1 mb-3">
-      <v-btn
-        to="/orders"
-        size="small"
-        class="items button-text"
-        variant="text"
-        color="black"
-      >
+      <v-btn to="/orders" size="small" class="items button-text" variant="text" color="black">
         <v-icon class="justify-start">mdi-arrow-left</v-icon>
       </v-btn>
       <h2 class="items">Order Details</h2>
     </v-row>
 
-    <v-col
-      v-if="condition"
-      class="justify-center text-center align-center px-0"
-    >
-      <v-img :src="imageAndSubtitle(order?.status_label).image"></v-img>
-      <h5>{{ imageAndSubtitle(order?.status_label).subtitle }}</h5>
+    <v-col v-if="order?.order_status_id === 2">
+      <div class="text-center">
+        <LottieAnimation :animationData="InProgressAnimation" class="mx-auto" width="200px" height="200px" />
+        <h4>Your order is currently being prepared.</h4>
+      </div>
+    </v-col>
+
+    <v-col v-if="order?.order_status_id === 3">
+      <div class="text-center">
+        <LottieAnimation :animationData="ReadyAnimation" class="mx-auto" width="200px" height="200px" />
+        <h4>Your order is ready for pick-up!</h4>
+      </div>
     </v-col>
 
     <v-col class="px-0" v-if="order">
-      <v-card class="custom-radius my-5 justify-space-between">
-        <v-card
-          color="primary"
-          height="auto"
-          class="btn pl-2 text-body-1 w-100 align-center"
-          >{{ statusMessage(order.status_label) }}</v-card
-        >
-
-        <v-row
-          v-for="(item, index) in order.cart.cart_items"
-          :key="index"
-          class="d-flex align-center"
-        >
-          <v-col class="px-0">
-            <v-card class="item-holder custom-radius">
-              <v-img
-                :src="item.product?.image"
-                alt="Product Image"
-                class="product-image"
-                height="100%"
-                width="100%"
-                cover
-              />
+      <v-card class="custom-radius mb-5 justify-space-between">
+        <v-container fluid class="py-0">
+          <v-row v-for="item in order.cart.cart_items" :key="item.id" class="my-3 ml-auto align-center">
+            <v-card class="custom-radius" height="80px" width="80px">
+              <v-img :src="item.product?.image" alt="Product Image" class="product-image" height="100%" width="100%"
+                cover />
             </v-card>
-            <v-card-title class="text-body-1">
-              {{ item.product?.name }}
+            <v-col>
+              <v-card-title class="text-subtitle-1">
+                {{ item.product?.name }}
+              </v-card-title>
+              <v-card-subtitle>
+                X {{ item.quantity }}
+              </v-card-subtitle>
+            </v-col>
+            <v-card-title class="last-item text-body-2">
+              ₱ {{ item.price }}
             </v-card-title>
-          </v-col>
-          <v-col class="text-body-1 px-0"> X {{ item.quantity }} </v-col>
-          <v-col class="last-item px-0 text-body-1"> ₱ {{ item.price }} </v-col>
-        </v-row>
+          </v-row>
 
-        <v-row class="justify-space-between mt-3">
-          <v-col class="px-0text-body-1"> Total </v-col>
-          <v-col class="px-0 text-body-1"> ₱ {{ order.cart.total }} </v-col>
-        </v-row>
+          <v-row class="mt-3 mb-1 align-center justify-space-between">
+            <v-card-title class="text-body-2">
+              Total Amount:
+            </v-card-title>
+            <v-card-title class="font-weight-bold" style="font-size: 15px;">
+              ₱ {{ order.cart.total }}
+            </v-card-title>
+          </v-row>
+        </v-container>
       </v-card>
 
-      <v-card class="custom-radius d-flex mt-3">
-        <v-row class="justify-space-between">
-          <v-card-title class="text-body-1"> Order Status </v-card-title>
-          <v-card-title>
-            {{ order.status_label }}
-          </v-card-title>
-        </v-row>
-        <v-row>
-          <v-card-title class="text-body-1"> Paid by: </v-card-title>
-          <v-card-title class="text-body-1">
+      <v-card class="custom-radius mt-3">
+        <v-col class="d-flex justify-space-between">
+          <p> Order Status </p>
+          <p>
+            {{ order?.status_label }}
+          </p>
+        </v-col>
+        <v-col class="d-flex justify-space-between">
+          <p>Paid by:</p>
+          <p class="text-body-1">
             {{ paymentMapping[order.cart?.payment_id] }}
-          </v-card-title>
-        </v-row>
-        <v-row>
-          <v-card-title class="text-body-1"> Order Time: </v-card-title>
-          <v-card-title class="text-body-1">
+          </p>
+        </v-col>
+        <v-col class="d-flex justify-space-between">
+          <p> Order Time: </p>
+          <p>
             {{ formatDate(order.created_at) }}
-          </v-card-title>
-        </v-row>
+          </p>
+        </v-col>
       </v-card>
     </v-col>
     <v-col v-else>
-        <h3> Loading order details... </h3>
+      <h3> Loading order details... </h3>
     </v-col>
   </div>
 </template>
@@ -92,6 +85,8 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 import { getAuth } from "@/pages/auth/authServiceProvider/authService";
+import InProgressAnimation from "../../Lottie/preparing.json";
+import ReadyAnimation from "../../Lottie/Ready.json";
 
 const route = useRoute();
 const order = ref(null);
@@ -120,46 +115,6 @@ onMounted(() => {
   getOrderDetails();
 });
 
-const statusMessage = (status) => {
-  switch (status) {
-    case "In progress":
-      return "Your order is currently being prepared";
-    case "Pending":
-      return "Your order is pending confirmation";
-    case "Ready for pick-up":
-      return "Your order is ready for pick up";
-    default:
-      return "Status unknown";
-  }
-};
-
-const condition = computed(() => order.value && order.value.status_label);
-
-const imageAndSubtitle = (status) => {
-  switch (status) {
-    case "Pending":
-      return {
-        image: "pic1",
-        subtitle: "Your order is being processed. Please wait a moment.",
-      };
-    case "In Progress":
-      return {
-        image: "pc2",
-        subtitle: "Your order is currently being prepared.",
-      };
-    case "Ready for Pick up":
-      return {
-        image: "pic3",
-        subtitle: "Your order is ready for pick up.",
-      };
-    default:
-      return {
-        image: "path/to/default-image.png",
-        subtitle: "Status unknown. Please check back later.",
-      };
-  }
-};
-
 const formatDate = (dateString) => {
   const options = {
     year: "numeric",
@@ -182,19 +137,24 @@ const formatDate = (dateString) => {
   justify-content: start;
   align-items: center;
 }
+
 .items {
   margin-right: 75px;
 }
+
 .button-text {
   font-size: 22px;
 }
+
 .product-image {
   height: auto;
   object-fit: cover;
 }
+
 .btn {
   border-radius: 0 !important;
 }
+
 .last-item {
   margin-left: auto;
 }
