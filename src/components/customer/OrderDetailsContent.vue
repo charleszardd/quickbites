@@ -26,7 +26,7 @@
         <v-container fluid class="py-0">
           <v-row v-for="item in order.cart.cart_items" :key="item.id" class="my-3 ml-auto align-center">
             <v-card class="custom-radius" height="80px" width="80px">
-              <v-img :src="item.product?.image" alt="Product Image" class="product-image" height="100%" width="100%"
+              <v-img :src="item.product?.image_url" alt="Product Image" class="product-image" height="100%" width="100%"
                 cover />
             </v-card>
             <v-col>
@@ -54,6 +54,12 @@
       </v-card>
 
       <v-card class="custom-radius mt-3">
+        <v-col class="d-flex justify-space-between">
+          <p class="font-weight-bold"> Order Number </p>
+          <p class="font-weight-bold">
+            {{ order?.order_number }}
+          </p>
+        </v-col>
         <v-col class="d-flex justify-space-between">
           <p> Order Status </p>
           <p>

@@ -10,7 +10,7 @@
             <p>No orders available for today.</p>
         </v-row>
         <v-row v-if="!loading && !error && orders.length > 0">
-            <OrderCard v-for="order in orders" :key="order.id" :order="order" />
+            <OrderCard v-for="order in sortedOrders" :key="order.id" :order="order" />
         </v-row>
     </v-col>
 </template>
@@ -38,6 +38,10 @@ const fetchTodayOrders = async () => {
     }
 };
 
+const sortedOrders = computed(() => {
+    return [...orders.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+});
+
 // Debounced function for fetching orders
 const debouncedFetchTodayOrders = () => {
     clearTimeout(debounceTimer);
@@ -47,10 +51,9 @@ const debouncedFetchTodayOrders = () => {
 // Fetch orders on component mount
 onMounted(() => {
     fetchTodayOrders();
-    // Listen for new order events
     window.Echo.channel('orders').listen('NewOrderCreated', (event) => {
-        orders.value.push(event.order);
-        debouncedFetchTodayOrders(); // Call the debounced fetch when a new order is created
+        console.log('New order received:', event.order);
+        debouncedFetchTodayOrders();
     });
 });
 

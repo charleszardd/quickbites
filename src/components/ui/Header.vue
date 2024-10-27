@@ -10,6 +10,7 @@
         <img src="../../../public/quickbites-logo.png" height="40" />
         <v-spacer />
 
+        <Notification v-if="isUserAuthenticated" />
         <CartNotifier v-if="isUserAuthenticated" />
 
         <v-btn v-else rounded class="button-text mr-6" to="/auth/register">Sign Up</v-btn>

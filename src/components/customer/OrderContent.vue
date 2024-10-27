@@ -31,9 +31,9 @@
             </v-card-title>
           </v-row>
 
-          <v-row v-for="item in order.cart.cart_items" :key="item.id" class="my-3 ml-2 align-center">
+          <v-row v-for="item in order.cart.cart_items.slice(0, 2)" :key="item.id" class="my-3 ml-2 align-center">
             <v-card class="custom-radius" height="80px" width="80px">
-              <v-img :src="item.product?.image" alt="Product Image" class="product-image" height="100%" width="100%"
+              <v-img :src="item.product?.image_url" alt="Product Image" class="product-image" height="100%" width="100%"
                 cover />
             </v-card>
             <v-col>
@@ -49,9 +49,13 @@
             </v-card-title>
           </v-row>
 
+          <v-row v-if="order.cart.cart_items.length > 2" class="justify-center">
+            <small>+{{ order.cart.cart_items.length - 2 }} More</small>
+          </v-row>
+
           <v-row class="mt-3 mb-1 justify-end">
             <v-card-title class="text-body-2 mr-2">
-              Total Amount: ₱ {{ order.cart.total }}
+              Total {{ calculateItemCount(order) }} items: ₱ {{ order.cart.total }}
             </v-card-title>
           </v-row>
 
@@ -90,6 +94,10 @@ const sortedOrders = computed(() => {
     (a, b) => new Date(b.created_at) - new Date(a.created_at)
   );
 });
+
+const calculateItemCount = (order) => {
+  return order.cart.cart_items.reduce((total, item) => total + item.quantity, 0);
+};
 </script>
 
 <style scoped>
