@@ -5,17 +5,15 @@
             <h2 class="page-title mx-auto">Notifications</h2>
         </v-row>
 
-        <v-card :to="`orderdetails/${notification.order_id}`" @click="markAsRead(notification)"
-            v-for="notification in notificationStore.getNotifications" :key="notification.id"
-            :class="notification.is_read ? 'bg-grey-lighten-2' : ''" flat>
+        <v-card v-for="notification in sortedNotifications" :key="notification.id"
+            :to="`orderdetails/${notification.order_id}`" @click="markAsRead(notification)"
+            :class="notification.is_read ? 'bg-grey-lighten-2' : ''" class="custom-radius mb-3" flat>
             <v-card-text>
                 <p>{{ notification.order_number }}</p>
-
                 <div class="d-flex justify-space-between mb-3">
                     <p><strong>{{ notification.message }}</strong></p>
                     <p v-if="!notification.is_read">Unread</p>
                 </div>
-
                 <small>{{ formatDate(notification.created_at) }}</small>
             </v-card-text>
         </v-card>
@@ -23,7 +21,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useNotificationStore } from '@/stores/notification';
 import { getAuth } from '@/pages/auth/authServiceProvider/authService';
 
@@ -37,11 +35,18 @@ const fetchNotifications = async () => {
 };
 
 const markAsRead = async (notification) => {
-    if (!notification.is_read) {
-        await notificationStore.markAsRead(notification.id);
-        notification.is_read = true;
-    }
+    await notificationStore.markAsRead(notification.id);
 };
+
+// Fetch the customer ID once and set up the Echo listener
+const customerId = getAuth().customer?.id || '';
+if (customerId) {
+    window.Echo.channel('notifications.' + customerId)
+        .listen('NotificationCreated', (event) => {
+            console.log('New notification:', event.notification);
+            notificationStore.addNotification(event.notification);
+        });
+}
 
 onMounted(fetchNotifications);
 
@@ -55,6 +60,10 @@ const formatDate = (date) => {
         hour12: true
     }).format(new Date(date));
 };
+
+const sortedNotifications = computed(() => {
+    return [...notificationStore.getNotifications].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+});
 </script>
 
 <style scoped>
