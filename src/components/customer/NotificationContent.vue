@@ -38,12 +38,10 @@ const markAsRead = async (notification) => {
     await notificationStore.markAsRead(notification.id);
 };
 
-// Fetch the customer ID once and set up the Echo listener
 const customerId = getAuth().customer?.id || '';
 if (customerId) {
     window.Echo.channel('notifications.' + customerId)
         .listen('NotificationCreated', (event) => {
-            console.log('New notification:', event.notification);
             notificationStore.addNotification(event.notification);
         });
 }
