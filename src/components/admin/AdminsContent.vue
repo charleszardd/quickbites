@@ -116,12 +116,14 @@ async function confirmDelete() {
       },
     });
     window.$snackbar("Admin deleted successfully", "success");
+    setTimeout(()=> {
+        modalVisible.value = false;
+    }, 3000);
 
     adminStore.admins = adminStore.admins.filter(
       (admin) => admin.id !== adminToDelete.value.id
     );
 
-    closeModal();
   } catch (error) {
     if (error.response && error.response.status === 403) {
       window.$snackbar(

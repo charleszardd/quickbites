@@ -128,6 +128,9 @@ const registerAdmin = async () => {
     closeModal();
     emit("admin-added");
     window.$snackbar("Admin successfully added!", "success");
+    setTimeout(()=>{
+        location.reload();
+    }, 3000)
     loading.value = false;
   } catch (error) {
     if (error.response && error.response.status === 403) {
