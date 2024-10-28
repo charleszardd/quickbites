@@ -1,18 +1,8 @@
 <template>
    <v-container fluid>
-      <v-row class="align-center mb-4">
-         <v-col class="d-flex align-center">
-            <v-btn icon @click="$router.go(-1)" variant="text">
-               <v-icon>mdi-arrow-left</v-icon>
-            </v-btn>
-            <h2 class="page-title mx-auto">About Us</h2>
-         </v-col>
-      </v-row>
-
       <v-row>
+         <h3 class="section-title">The Team Behind Quick Bites</h3>
          <v-col>
-            <h3 class="section-title mb-3">Meet Our Team</h3>
-
             <div class="carousel-container">
                <div class="carousel" :style="carouselStyle">
                   <div class="card-wrapper" v-for="member in memberDetails" :key="member.name">
