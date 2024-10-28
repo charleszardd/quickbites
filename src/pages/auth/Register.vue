@@ -41,6 +41,7 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import { setAuth } from "./authServiceProvider/authService";
 
 const formRef = ref(null);
 const isFormValid = ref(false);
@@ -81,7 +82,7 @@ const login = async () => {
       email: form.value.email,
       password: form.value.password,
     });
-    window.localStorage.setItem('token', response.data.token);
+    setAuth( response.data.token, response.data.customer);
     setTimeout(() => {
       window.location.href = `/UploadProfile`;
     }, 1500);
