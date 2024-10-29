@@ -10,7 +10,7 @@
 
     <v-row v-else-if="hasProducts">
       <v-col v-for="product in products" :key="product.id" cols="12" sm="6" md="4">
-        <v-card class="custom-radius product-card py-2" height="90" :class="{ disabled: product.stock_quantity === 0 }">
+        <v-card class="custom-radius product-card py-2" height="90" :class="{ disabled: product.status_id === 2 }">
           <v-card class="custom-radius product-image-holder">
             <v-img :src="product.image_url" alt="Product Image" class="product-image" height="100%" width="100%"
               cover />
@@ -26,7 +26,7 @@
               <small>{{ statusMapping[product.status_id] }}</small>
             </v-card-subtitle>
           </v-col>
-          <v-btn @click.prevent="addToCart(product)" color="primary add-button" height="100">
+          <v-btn @click.prevent="addToCart(product)" color="primary add-button" size="" height="100">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-card>
@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted, computed } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { useRouter } from 'vue-router';
 import axios from "axios";
 import { cart } from "@/stores/cart";
@@ -59,11 +59,11 @@ const props = defineProps({
 const router = useRouter();
 const products = ref([]);
 const loading = ref(false);
-const page = ref(1);
-const hasMoreProducts = ref(true);
+const productQuantities = ref({});
 
 const categoryName = computed(() => {
-  const category = props.categories.find((category) => category.id === props.categoryId);
+  if (!props.categories) return "Unknown Category";
+  const category = props.categories.find((cat) => cat.id === props.categoryId);
   return category ? category.name : "Unknown Category";
 });
 
@@ -72,21 +72,13 @@ const statusMapping = {
   2: "Sold Out",
 };
 
-const fetchProducts = async () => {
-  if (loading.value || !hasMoreProducts.value) return;
+const fetchProducts = async (categoryId) => {
+  if (!categoryId) return;
+
   loading.value = true;
-
   try {
-    const response = await axios.get(`/api/categories/${props.categoryId}/products?page=${page.value}`);
-
-    const newProducts = response.data.data;
-
-    if (newProducts.length === 0) {
-      hasMoreProducts.value = false;
-    } else {
-      products.value.push(...newProducts);
-      page.value += 1;
-    }
+    const response = await axios.get(`/api/categories/${categoryId}/products`);
+    products.value = response.data;
   } catch (error) {
     console.error("Failed to fetch products:", error);
   } finally {
@@ -94,33 +86,18 @@ const fetchProducts = async () => {
   }
 };
 
-onMounted(() => {
-  fetchProducts();
-  window.addEventListener("scroll", handleScroll);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("scroll", handleScroll);
-});
-
-const handleScroll = () => {
-  const bottom =
-    document.documentElement.scrollHeight ===
-    window.innerHeight + window.scrollY;
-  if (bottom && !loading.value && hasMoreProducts.value) {
-    fetchProducts();
-  }
-};
-
 watch(
   () => props.categoryId,
   (newCategoryId) => {
-    products.value = [];
-    page.value = 1;
-    hasMoreProducts.value = true;
-    fetchProducts();
+    fetchProducts(newCategoryId);
   }
 );
+
+onMounted(() => {
+  if (props.categoryId) {
+    fetchProducts(props.categoryId);
+  }
+});
 
 const hasProducts = computed(() => {
   return products.value.length > 0;
@@ -128,7 +105,9 @@ const hasProducts = computed(() => {
 
 const addToCart = async (product) => {
   const productId = product.id;
+
   const quantity = 1;
+
   const { customer } = getAuth();
   const customerId = customer ? customer.id : null;
 
@@ -139,6 +118,7 @@ const addToCart = async (product) => {
   }
 
   try {
+
     const items = [{
       product_id: productId,
       quantity: quantity
@@ -146,10 +126,12 @@ const addToCart = async (product) => {
 
     await axios.post(`/api/cart/${customerId}`, { items });
     cart.addProduct(product);
+
   } catch (error) {
     console.error("Failed to add product to cart:", error);
   }
 };
+
 </script>
 
 <style scoped>
