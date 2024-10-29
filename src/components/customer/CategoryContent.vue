@@ -10,9 +10,10 @@
 
     <v-row v-else-if="hasProducts">
       <v-col v-for="product in products" :key="product.id" cols="12" sm="6" md="4">
-        <v-card class="custom-radius product-card py-2" height="90" :class="{ disabled: product.status_id === 2 }">
+        <v-card class="custom-radius product-card py-2" height="90" :class="{ disabled: product.stock_quantity === 0 }">
           <v-card class="custom-radius product-image-holder">
-            <v-img :src="product.image_url" alt="Product Image" class="product-image" height="100%" width="100%" cover />
+            <v-img :src="product.image_url" alt="Product Image" class="product-image" height="100%" width="100%"
+              cover />
           </v-card>
           <v-col class="pa-0">
             <v-card-title class="text-subtitle-1 py-0">
@@ -94,7 +95,7 @@ const fetchProducts = async () => {
 };
 
 onMounted(() => {
-  fetchProducts(); 
+  fetchProducts();
   window.addEventListener("scroll", handleScroll);
 });
 
@@ -117,7 +118,7 @@ watch(
     products.value = [];
     page.value = 1;
     hasMoreProducts.value = true;
-    fetchProducts(); 
+    fetchProducts();
   }
 );
 
