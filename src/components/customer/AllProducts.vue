@@ -3,27 +3,11 @@
     <h3 class="mb-2">All</h3>
 
     <v-row v-if="hasProducts">
-      <v-col
-        v-for="product in products"
-        :key="product.id"
-        cols="12"
-        sm="6"
-        md="4"
-      >
-        <v-card
-          class="custom-radius product-card py-2"
-          height="90"
-          :class="{ disabled: product.status_id === 2 }"
-        >
+      <v-col v-for="product in products" :key="product.id" cols="12" sm="6" md="4">
+        <v-card class="custom-radius product-card py-2" height="90" :class="{ disabled: product.stock_quantity === 0 }">
           <v-card class="custom-radius product-image-holder">
-            <v-img
-              :src="product.image_url"
-              alt="Product Image"
-              class="product-image"
-              height="100%"
-              width="100%"
-              cover
-            />
+            <v-img :src="product.image_url" alt="Product Image" class="product-image" height="100%" width="100%"
+              cover />
           </v-card>
 
           <v-col class="pa-0">
@@ -38,12 +22,7 @@
             </v-card-subtitle>
           </v-col>
 
-          <v-btn
-            @click.prevent="addToCart(product)"
-            color="primary add-button"
-            size=""
-            height="100"
-          >
+          <v-btn @click.prevent="addToCart(product)" color="primary add-button" size="" height="100">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-card>
