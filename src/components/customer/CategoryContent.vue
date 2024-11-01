@@ -9,11 +9,27 @@
     </v-row>
 
     <v-row v-else-if="hasProducts">
-      <v-col v-for="product in products" :key="product.id" cols="12" sm="6" md="4">
-        <v-card class="custom-radius product-card py-2" height="90" :class="{ disabled: product.stock_quantity === 0 }">
+      <v-col
+        v-for="product in sortedProducts"
+        :key="product.id"
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-card
+          class="custom-radius product-card py-2"
+          height="90"
+          :class="{ disabled: product.stock_quantity === 0 }"
+        >
           <v-card class="custom-radius product-image-holder">
-            <v-img :src="product.image_url" alt="Product Image" class="product-image" height="100%" width="100%"
-              cover />
+            <v-img
+              :src="product.image_url"
+              alt="Product Image"
+              class="product-image"
+              height="100%"
+              width="100%"
+              cover
+            />
           </v-card>
           <v-col class="pa-0">
             <v-card-title class="text-subtitle-1 py-0">
@@ -54,6 +70,10 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  highlightedProductId: {
+    type: Number,
+    default: null,
+  },
 });
 
 const router = useRouter();
@@ -78,7 +98,6 @@ const fetchProducts = async () => {
 
   try {
     const response = await axios.get(`/api/categories/${props.categoryId}/products?page=${page.value}`);
-
     const newProducts = response.data.data;
 
     if (newProducts.length === 0) {
@@ -104,9 +123,7 @@ onUnmounted(() => {
 });
 
 const handleScroll = () => {
-  const bottom =
-    document.documentElement.scrollHeight ===
-    window.innerHeight + window.scrollY;
+  const bottom = document.documentElement.scrollHeight === window.innerHeight + window.scrollY;
   if (bottom && !loading.value && hasMoreProducts.value) {
     fetchProducts();
   }
@@ -124,6 +141,15 @@ watch(
 
 const hasProducts = computed(() => {
   return products.value.length > 0;
+});
+
+const sortedProducts = computed(() => {
+  if (props.highlightedProductId) {
+    const highlightedProduct = products.value.find(product => product.id === props.highlightedProductId);
+    const otherProducts = products.value.filter(product => product.id !== props.highlightedProductId);
+    return highlightedProduct ? [highlightedProduct, ...otherProducts] : otherProducts;
+  }
+  return products.value;
 });
 
 const addToCart = async (product) => {
