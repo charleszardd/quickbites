@@ -74,6 +74,13 @@ const props = defineProps({
     type: Number,
     default: null,
   },
+  searchedProductId: {
+    type: Number,
+    default: null,
+  },
+  products: {
+    type: Array,
+  },
 });
 
 const router = useRouter();
@@ -143,14 +150,42 @@ const hasProducts = computed(() => {
   return products.value.length > 0;
 });
 
-const sortedProducts = computed(() => {
-  if (props.highlightedProductId) {
-    const highlightedProduct = products.value.find(product => product.id === props.highlightedProductId);
-    const otherProducts = products.value.filter(product => product.id !== props.highlightedProductId);
-    return highlightedProduct ? [highlightedProduct, ...otherProducts] : otherProducts;
+// Watch changes on product IDs to force reordering
+watch(
+  [() => props.highlightedProductId, () => props.searchedProductId],
+  () => {
+    console.log("highlightedProductId or searchedProductId changed. Reordering products.");
+    sortedProducts.value = orderProducts();
   }
-  return products.value;
-});
+);
+
+// Helper function to order products based on selected IDs
+const orderProducts = () => {
+  const highlightedProduct = products.value.find(product => product.id === props.highlightedProductId);
+  const searchedProduct = products.value.find(product => product.id === props.searchedProductId);
+
+  // Remove highlighted and searched products from the original list
+  const otherProducts = products.value.filter(product =>
+    product.id !== props.highlightedProductId && product.id !== props.searchedProductId
+  );
+
+  console.log("Ordering products with", {
+    highlightedProduct,
+    searchedProduct,
+    otherProducts,
+  });
+
+  // Sort order: searched product (if found), highlighted product (if found), others
+  return [
+    ...(searchedProduct ? [searchedProduct] : []),
+    ...(highlightedProduct && highlightedProduct.id !== searchedProduct?.id ? [highlightedProduct] : []),
+    ...otherProducts,
+  ];
+};
+
+// sortedProducts computed property
+const sortedProducts = computed(() => orderProducts());
+
 
 const addToCart = async (product) => {
   const productId = product.id;
@@ -193,17 +228,18 @@ const addToCart = async (product) => {
 }
 
 .product-image-holder {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
+  margin-right: 10px;
 }
 
 .product-image {
-  width: 100%;
-  height: auto;
+  object-fit: cover;
 }
 
 .add-button {
-  width: 40px !important;
-  border-radius: 0px !important;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 </style>

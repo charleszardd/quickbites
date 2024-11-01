@@ -37,13 +37,13 @@
       :categoryId="activeCategory"
       v-if="activeCategory"
       :categories="categories"
-      :highlightedProductId="searchedProductId"
+      :highlightedProductId="highlightedProductId"
       :searchedProductId="searchedProductId"
+      :products="products"
     />
     <AllProducts v-else />
   </div>
 </template>
-
 
 <script setup>
 import { ref, onMounted } from "vue";
@@ -53,11 +53,6 @@ const categories = ref([]);
 const activeCategory = ref(null);
 const highlightedProductId = ref(null);
 const searchedProductId = ref(null);
-
-const onSearch = (productId) => {
-  searchedProductId.value = productId;
-  activeCategory.value = null;
-};
 
 const fetchCategories = async () => {
   try {
@@ -73,36 +68,11 @@ const setActiveCategory = (categoryId) => {
     activeCategory.value === categoryId ? null : categoryId;
 };
 
-
-const navigateToCategory = (categoryId, searchedProductId) => {
+const navigateToCategory = (categoryId, productId) => {
   activeCategory.value = categoryId;
-
-
-  if (searchedProductId) {
-    props.searchedProductId = searchedProductId;
-  }
+  highlightedProductId.value = productId; 
+  searchedProductId.value = productId; 
 };
-
-const sortedProducts = computed(() => {
-  const highlightedProduct = products.value.find(product => product.id === props.highlightedProductId);
-  const searchedProduct = products.value.find(product => product.id === props.searchedProductId);
-
-  const otherProducts = products.value.filter(product => 
-    product.id !== props.highlightedProductId && product.id !== props.searchedProductId
-  );
-
-  const sortedArray = [];
-
-  if (searchedProduct) {
-    sortedArray.push(searchedProduct);
-  }
-
-  if (highlightedProduct && highlightedProduct.id !== searchedProduct?.id) {
-    sortedArray.push(highlightedProduct);
-  }
-
-  return [...sortedArray, ...otherProducts];
-});
 
 onMounted(() => {
   fetchCategories();
