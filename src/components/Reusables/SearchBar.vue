@@ -100,7 +100,7 @@ const onFocus = () => {
 };
 
 const selectSuggestion = (item) => {
-  emit('select-product', item.category.id);
+  emit('select-product', item.category.id, item.id);
   searchQuery.value = item.name;
   suggestions.value = [];
   showSuggestions.value = false; 

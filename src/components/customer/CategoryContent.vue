@@ -146,13 +146,13 @@ watch(
 const hasProducts = computed(() => products.value.length > 0);
 
 const orderProducts = () => {
-  const highlightedProduct = products.value.find(product => product.id === props.highlightedProductId);
   const searchedProduct = products.value.find(product => product.id === props.searchedProductId);
+  const highlightedProduct = products.value.find(product => product.id === props.highlightedProductId);
 
-  const otherProducts = products.value.filter(product =>
-    product.id !== props.highlightedProductId && product.id !== props.searchedProductId
+  const otherProducts = products.value.filter(
+    product => product.id !== props.searchedProductId && product.id !== props.highlightedProductId
   );
-
+  
   return [
     ...(searchedProduct ? [searchedProduct] : []),
     ...(highlightedProduct && highlightedProduct.id !== searchedProduct?.id ? [highlightedProduct] : []),
