@@ -42,7 +42,7 @@
               <small>{{ statusMapping[product.status_id] }}</small>
             </v-card-subtitle>
           </v-col>
-          <v-btn @click.prevent="addToCart(product)" color="primary add-button" height="100">
+          <v-btn @click.prevent="addToCart(product)" color="primary add-button" size="" height="100">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-card>
@@ -150,7 +150,6 @@ const hasProducts = computed(() => {
   return products.value.length > 0;
 });
 
-// Watch changes on product IDs to force reordering
 watch(
   [() => props.highlightedProductId, () => props.searchedProductId],
   () => {
@@ -159,12 +158,10 @@ watch(
   }
 );
 
-// Helper function to order products based on selected IDs
 const orderProducts = () => {
   const highlightedProduct = products.value.find(product => product.id === props.highlightedProductId);
   const searchedProduct = products.value.find(product => product.id === props.searchedProductId);
 
-  // Remove highlighted and searched products from the original list
   const otherProducts = products.value.filter(product =>
     product.id !== props.highlightedProductId && product.id !== props.searchedProductId
   );
@@ -175,7 +172,6 @@ const orderProducts = () => {
     otherProducts,
   });
 
-  // Sort order: searched product (if found), highlighted product (if found), others
   return [
     ...(searchedProduct ? [searchedProduct] : []),
     ...(highlightedProduct && highlightedProduct.id !== searchedProduct?.id ? [highlightedProduct] : []),
@@ -183,9 +179,7 @@ const orderProducts = () => {
   ];
 };
 
-// sortedProducts computed property
 const sortedProducts = computed(() => orderProducts());
-
 
 const addToCart = async (product) => {
   const productId = product.id;
@@ -238,8 +232,7 @@ const addToCart = async (product) => {
 }
 
 .add-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  width: 40px !important;
+  border-radius: 0 !important;
 }
 </style>
