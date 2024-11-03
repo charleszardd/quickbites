@@ -2,7 +2,7 @@
   <v-col class="mx-0 px-1">
     <h3 class="mb-2">{{ categoryName }}</h3>
 
-    <v-row v-if="loading">
+    <v-row v-if="loading && products.length === 0">
       <v-col>
         <p>Loading products...</p>
       </v-col>
@@ -78,9 +78,6 @@ const props = defineProps({
     type: Number,
     default: null,
   },
-  products: {
-    type: Array,
-  },
 });
 
 const router = useRouter();
@@ -107,11 +104,11 @@ const fetchProducts = async () => {
     const response = await axios.get(`/api/categories/${props.categoryId}/products?page=${page.value}`);
     const newProducts = response.data.data;
 
-    if (newProducts.length === 0) {
-      hasMoreProducts.value = false;
-    } else {
-      products.value.push(...newProducts);
+    if (newProducts.length > 0) {
+      products.value = [...products.value, ...newProducts];
       page.value += 1;
+    } else {
+      hasMoreProducts.value = false;
     }
   } catch (error) {
     console.error("Failed to fetch products:", error);
@@ -130,15 +127,15 @@ onUnmounted(() => {
 });
 
 const handleScroll = () => {
-  const bottom = document.documentElement.scrollHeight === window.innerHeight + window.scrollY;
-  if (bottom && !loading.value && hasMoreProducts.value) {
+  const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
+  if (scrollTop + clientHeight >= scrollHeight - 5 && !loading.value && hasMoreProducts.value) {
     fetchProducts();
   }
 };
 
 watch(
   () => props.categoryId,
-  (newCategoryId) => {
+  () => {
     products.value = [];
     page.value = 1;
     hasMoreProducts.value = true;
@@ -146,17 +143,7 @@ watch(
   }
 );
 
-const hasProducts = computed(() => {
-  return products.value.length > 0;
-});
-
-watch(
-  [() => props.highlightedProductId, () => props.searchedProductId],
-  () => {
-    console.log("highlightedProductId or searchedProductId changed. Reordering products.");
-    sortedProducts.value = orderProducts();
-  }
-);
+const hasProducts = computed(() => products.value.length > 0);
 
 const orderProducts = () => {
   const highlightedProduct = products.value.find(product => product.id === props.highlightedProductId);
@@ -165,12 +152,6 @@ const orderProducts = () => {
   const otherProducts = products.value.filter(product =>
     product.id !== props.highlightedProductId && product.id !== props.searchedProductId
   );
-
-  console.log("Ordering products with", {
-    highlightedProduct,
-    searchedProduct,
-    otherProducts,
-  });
 
   return [
     ...(searchedProduct ? [searchedProduct] : []),
@@ -183,23 +164,16 @@ const sortedProducts = computed(() => orderProducts());
 
 const addToCart = async (product) => {
   const productId = product.id;
-  const quantity = 1;
   const { customer } = getAuth();
   const customerId = customer ? customer.id : null;
 
   if (!customerId) {
-    console.error("Customer is not logged in.");
     router.push('/auth/login');
     return;
   }
 
   try {
-    const items = [{
-      product_id: productId,
-      quantity: quantity
-    }];
-
-    await axios.post(`/api/cart/${customerId}`, { items });
+    await axios.post(`/api/cart/${customerId}`, { items: [{ product_id: productId, quantity: 1 }] });
     cart.addProduct(product);
   } catch (error) {
     console.error("Failed to add product to cart:", error);
@@ -209,10 +183,8 @@ const addToCart = async (product) => {
 
 <style scoped>
 .product-card {
-  transition: 0.3s ease;
   display: flex;
   align-items: center;
-  flex: 1;
 }
 
 .product-card.disabled {
@@ -232,7 +204,7 @@ const addToCart = async (product) => {
 }
 
 .add-button {
-  width: 40px !important;
-  border-radius: 0 !important;
+  width: 40px;
+  border-radius: 0!important;
 }
 </style>
