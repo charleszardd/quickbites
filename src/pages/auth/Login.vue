@@ -4,18 +4,21 @@
       <v-col cols="12" sm="8" md="4" class="login-col">
         <div class="text-h6 mb-5">Login</div>
 
-        <v-text-field v-model="form.email" type="email" label="Enter your email address" variant="outlined"
-          class="custom-radius" />
-        <div class="d-flex password-field">
-          <v-text-field v-model="form.password" :type="passwordHidden ? 'password' : 'text'" class="custom-radius"
-            label="Enter your password" variant="outlined" />
-          <v-btn @click="togglePasswordVisibility" icon class="show-password" variant="text">
-            <v-icon>{{ passwordHidden ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
-          </v-btn>
-        </div>
+        <v-form @submit.prevent="login">
+          <v-text-field v-model="form.email" type="email" label="Enter your email address" variant="outlined"
+            class="custom-radius" />
+          <div class="d-flex password-field">
+            <v-text-field v-model="form.password" :type="passwordHidden ? 'password' : 'text'" class="custom-radius"
+              label="Enter your password" variant="outlined" />
+            <v-btn @click="togglePasswordVisibility" icon class="show-password" variant="text">
+              <v-icon>{{ passwordHidden ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
+            </v-btn>
+          </div>
 
-        <v-btn type="submit" @click="login" :loading="loading" height="53" class="button-text w-100 mt-2">Sign
-          In</v-btn>
+          <v-btn type="submit" :loading="loading" height="53" class="button-text w-100 mt-2">Sign
+            In</v-btn>
+        </v-form>
+
         <div class="mt-4">
           <p>
             Don't have an account?
