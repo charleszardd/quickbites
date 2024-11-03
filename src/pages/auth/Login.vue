@@ -5,10 +5,14 @@
         <div class="text-h6 mb-5">Login</div>
 
         <v-text-field v-model="form.email" type="email" label="Enter your email address" variant="outlined"
-          class="custom-radius"></v-text-field>
-
-        <v-text-field v-model="form.password" type="password" class="custom-radius" label="Enter your password"
-          variant="outlined"></v-text-field>
+          class="custom-radius" />
+        <div class="d-flex password-field">
+          <v-text-field v-model="form.password" :type="passwordHidden ? 'password' : 'text'" class="custom-radius"
+            label="Enter your password" variant="outlined" />
+          <v-btn @click="togglePasswordVisibility" icon class="show-password" variant="text">
+            <v-icon>{{ passwordHidden ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
+          </v-btn>
+        </div>
 
         <v-btn type="submit" @click="login" :loading="loading" height="53" class="button-text w-100 mt-2">Sign
           In</v-btn>
@@ -34,6 +38,12 @@ const form = ref({
   password: "",
 });
 
+const passwordHidden = ref(true);
+
+const togglePasswordVisibility = () => {
+  passwordHidden.value = !passwordHidden.value;
+};
+
 const login = async () => {
   loading.value = true;
   try {
@@ -57,8 +67,8 @@ const login = async () => {
       window.$snackbar(`Oops! Something went wrong.`, "error");
     }
   } catch (error) {
-    if (error.response && error.response.status === 401 ) {
-        window.$snackbar("Incorrect email or password!", "error");
+    if (error.response && error.response.status === 401) {
+      window.$snackbar("Incorrect email or password!", "error");
     } else {
       window.$snackbar(`Oops! Something went wrong.`, "error");
     }
@@ -77,5 +87,15 @@ const login = async () => {
 .register-link {
   text-decoration: underline;
   color: #171826;
+}
+
+.password-field {
+  position: relative;
+}
+
+.show-password {
+  position: absolute;
+  right: 0%;
+  top: 5%;
 }
 </style>
