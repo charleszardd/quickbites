@@ -6,7 +6,7 @@
       </v-btn>
       <h2>My Cart</h2>
 
-      <v-menu activator="parent" offset-y>
+      <v-menu offset-y>
         <template v-slot:activator="{ props }">
           <v-btn class="button-text" variant="text" size="small" color="black" v-bind="props">
             <v-icon>mdi-dots-horizontal</v-icon>
@@ -26,12 +26,12 @@
       </v-menu>
     </v-row>
 
-    <v-container fluid class="px-0 d-flex flex-column">
-      <v-row class="flex-grow-1" v-if="cartProducts.length === 0" style="justify-content: center; align-items: center">
+    <v-container fluid>
+      <v-row class="d-flex flex-column align-center justify-center" v-if="cartProducts.length === 0">
         <LottieAnimation :animationData="animationData" width="200px" height="200px" />
-        <span class="empty-title my-2">Your cart is empty.</span>
-        <v-btn variant="text">
-          <router-link color="primary" class="back-menu-link" to="/">Go back to menu to order</router-link>
+        <p class="empty-title my-5">Oops, your cart is empty!</p>
+        <v-btn to="/" color="primary" height="50px" class="back-menu-link">
+          Shop Now
         </v-btn>
       </v-row>
 
@@ -249,13 +249,7 @@ const totalAmount = computed(() => {
 }
 
 .empty-title {
-  font-size: 20px;
-}
-
-.back-menu-link {
-  text-decoration: none;
-  font-size: 20px;
-  color: #fc8019;
+  font-size: 18px;
 }
 
 .back-menu-link:hover {

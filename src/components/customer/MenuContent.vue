@@ -5,36 +5,18 @@
         <SearchBar @select-product="navigateToCategory" />
       </v-col>
       <v-row class="category-container my-3">
-        <div
-          v-for="category in categories"
-          :key="category.id"
-          class="category-wrapper"
-          :class="{ active: category.id === activeCategory }"
-        >
-          <v-card
-            :class="['category-card custom-radius', { active: category.id === activeCategory }]"
-            @click="setActiveCategory(category.id)"
-            color="transparent"
-            flat
-          >
-            <v-img
-              :src="category.image"
-              alt="Category Image"
-              class="category-image"
-            />
+        <div v-for="category in categories" :key="category.id" class="category-wrapper"
+          :class="{ active: category.id === activeCategory }">
+          <v-card :class="['category-card custom-radius', { active: category.id === activeCategory }]"
+            @click="setActiveCategory(category.id)" color="transparent" flat>
+            <v-img :src="category.image" alt="Category Image" class="category-image" />
           </v-card>
           <div class="category-text">{{ category.name }}</div>
         </div>
       </v-row>
     </v-container>
-    <CategoryContent
-      :categoryId="activeCategory"
-      v-if="activeCategory"
-      :categories="categories"
-      :highlightedProductId="highlightedProductId"
-      :searchedProductId="searchedProductId"
-      :products="products"  
-    />
+    <CategoryContent :categoryId="activeCategory" v-if="activeCategory" :categories="categories"
+      :highlightedProductId="highlightedProductId" :searchedProductId="searchedProductId" :products="products" />
     <AllProducts v-else />
   </div>
 </template>
@@ -47,7 +29,7 @@ const categories = ref([]);
 const activeCategory = ref(null);
 const highlightedProductId = ref(null);
 const searchedProductId = ref(null);
-const products = ref([]);  
+const products = ref([]);
 
 const fetchCategories = async () => {
   try {
@@ -64,8 +46,8 @@ const setActiveCategory = (categoryId) => {
 
 const navigateToCategory = (categoryId, productId) => {
   activeCategory.value = categoryId;
-  highlightedProductId.value = productId; 
-  searchedProductId.value = productId; 
+  highlightedProductId.value = productId;
+  searchedProductId.value = productId;
 };
 
 watch(activeCategory, async (newCategory) => {
