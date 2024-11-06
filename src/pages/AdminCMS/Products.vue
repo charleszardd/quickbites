@@ -23,18 +23,9 @@
                   </v-card>
                   <v-spacer class="custom-spacer"></v-spacer>
                   <v-row class="align-center">
-                    <v-text-field
-                      v-model="searchQuery"
-                      max-width="300px"
-                      class="custom-radius mr-5"
-                      height="5px"
-                      style="height: 60px;"
-                      dense
-                      variant="outlined"
-                      label="Search product"
-                      prepend-inner-icon="mdi-magnify"
-                      clearable
-                    ></v-text-field>
+                    <v-text-field v-model="searchQuery" max-width="300px" class="custom-radius mr-5" height="5px"
+                      style="height: 60px;" dense variant="outlined" label="Search product"
+                      prepend-inner-icon="mdi-magnify" clearable></v-text-field>
                     <AddNewProduct />
                   </v-row>
                 </v-row>
@@ -42,12 +33,9 @@
 
               <v-card-text>
                 <v-tabs-items v-model="tab">
-                  <v-tab-item v-for="category in ['meals', 'snacks', 'chips', 'candies', 'drinks', 'supplies']" :key="category" :value="category">
-                    <ProductCategory
-                      v-if="tab === category"
-                      :category="category"
-                      :searchQuery="searchQuery"
-                    />
+                  <v-tab-item v-for="category in ['meals', 'snacks', 'chips', 'candies', 'drinks', 'supplies']"
+                    :key="category" :value="category">
+                    <ProductCategory v-if="tab === category" :category="category" :searchQuery="searchQuery" />
                   </v-tab-item>
                 </v-tabs-items>
               </v-card-text>
@@ -100,7 +88,7 @@ const resetProducts = async () => {
 
 watch(tab, () => {
   searchQuery.value = '';
-  resetProducts(); 
+  resetProducts();
 });
 </script>
 
@@ -109,8 +97,8 @@ watch(tab, () => {
 .custom-spacer {
   width: 0 !important;
 }
-.custom-radius{
-    border-radius: 10px!important;
-}
 
+.custom-radius {
+  border-radius: 10px !important;
+}
 </style>
