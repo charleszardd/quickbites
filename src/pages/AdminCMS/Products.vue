@@ -23,11 +23,18 @@
                   </v-card>
                   <v-spacer class="custom-spacer"></v-spacer>
                   <v-row class="align-center">
-                    <SearchBar
-                      @select-product="navigateToCategory"
-                      :height="5"
-                      class="custom-height mr-10"
-                    />
+                    <v-text-field
+                      v-model="searchQuery"
+                      max-width="300px"
+                      class="custom-radius mr-5"
+                      height="5px"
+                      style="height: 60px;"
+                      dense
+                      variant="outlined"
+                      label="Search product"
+                      prepend-inner-icon="mdi-magnify"
+                      clearable
+                    ></v-text-field>
                     <AddNewProduct />
                   </v-row>
                 </v-row>
@@ -38,10 +45,8 @@
                   <v-tab-item v-for="category in ['meals', 'snacks', 'chips', 'candies', 'drinks', 'supplies']" :key="category" :value="category">
                     <ProductCategory
                       v-if="tab === category"
-                      :products="filteredProducts"
                       :category="category"
-                      :productId="searchedProductId"
-                      :key="category"
+                      :searchQuery="searchQuery"
                     />
                   </v-tab-item>
                 </v-tabs-items>
@@ -55,65 +60,57 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from "vue";
-import ProductCategory from "@/components/admin/ProductsComponents/ProductCategory.vue";
-import { useProducts } from "@/composables/useProducts";
+import { ref, watch, onMounted } from "vue";
+import axios from "axios";
 
 const tab = ref("meals");
-const searchedProductId = ref(null); 
+const searchQuery = ref('');
 
-const { fetchProducts, products, currentPage, totalPages, setSearchedProduct } = useProducts(tab);
-
-onMounted(() => {
-  fetchProducts(1);
-});
-
-watch(tab, (newCategory) => {
-  fetchProducts(1); 
-});
-
-const categoryMap = {
-  1: "meals",
-  2: "snacks",
-  3: "chips",
-  4: "candies",
-  5: "drinks",
-  6: "supplies",
-};
-
-const navigateToCategory = async (categoryId, productId) => {
-  console.log("Navigating to category:", categoryId, "with productId:", productId);
-
-  const categoryName = categoryMap[categoryId];
-
-  if (!categoryName) {
-    console.error("Invalid category ID:", categoryId);
-    return;
-  }
-
-  tab.value = categoryName; 
-  searchedProductId.value = productId; 
-  setSearchedProduct(productId);
-};
-
-const filteredProducts = computed(() => {
-  
-  return products.value.filter(product => product.category === tab.value);
-});
-
-const loadMoreProducts = async () => {
-  if (currentPage.value < totalPages.value) {
-    const nextPage = currentPage.value + 1;
-    await fetchProducts(nextPage);  
+const onInputChange = () => {
+  if (searchQuery.value) {
+    searchProducts();
+  } else {
+    resetProducts();
   }
 };
+
+const searchProducts = async () => {
+  try {
+    const response = await axios.get(`/api/search-products`, {
+      params: {
+        searchTerm: searchQuery.value,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+};
+
+const resetProducts = async () => {
+  try {
+    await axios.get(`/api/products`, {
+      params: {
+        category: tab.value,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+};
+
+watch(tab, () => {
+  searchQuery.value = '';
+  resetProducts(); 
+});
 </script>
+
 
 <style scoped>
 .custom-spacer {
   width: 0 !important;
 }
-.custom-height {
-  height: 20px !important;
+.custom-radius{
+    border-radius: 10px!important;
 }
+
 </style>
